@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联系我们 - 溪城大学图书馆</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        /* ========== 1. 顶部头部：logo + 联系入口（和首页完全一致） ========== */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 22px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 {
+  font-size: 40px;
+  color: #005ea5; /* 保留原有蓝色 */
+  font-weight: normal; /* 书法体取消加粗更自然 */
+  font-family: 'Ma Shan Zheng', cursive; /* 马善政书法体 */
+}
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+        }
+
+        .header-right a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .header-right a:hover {
+            color: #005ea5;
+        }
+
+        /* ========== 2. 顶部横向导航栏核心样式（和首页完全一致） ========== */
+        .main-nav-container {
+            width: 100%;
+            background-color: #005ea5; /* 上大图书馆蓝色主调 */
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-nav {
+            width: 100%;
+        }
+
+        /* 菜单列表：flex实现横向排列 */
+        .menu-list {
+            list-style: none; /* 去掉默认小圆点 */
+            display: flex; /* 核心：横向排列 */
+            margin: 0;
+            padding: 0 20px;
+        }
+
+        .menu-item {
+            margin: 0;
+        }
+
+        /* 菜单项链接样式 */
+        .menu-item a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 35px; /* 核心：上下18px，左右35px */
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px; /* 字体放大更协调 */
+        }
+        /* 选中的菜单项高亮（联系我们页高亮） */
+        .menu-item.active a {
+            background-color: #004a8c;
+        }
+
+        /* 鼠标悬浮效果 */
+        .menu-item a:hover {
+            background-color: #004a8c;
+        }
+
+        /* 图标样式微调 */
+        .menu-item a i {
+            font-size: 14px;
+        }
+
+        /* 主内容容器 */
+        .content-wrap {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* 通用卡片样式 */
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #005ea5;
+            font-size: 22px;
+        }
+
+        /* 基础联系信息（一行排版） */
+        .basic-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            font-size: 18px;
+            color: #333;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-item i {
+            color: #005ea5;
+            font-size: 20px;
+            width: 25px;
+            text-align: center;
+        }
+
+        /* 馆务人员板块 */
+        .staff-title {
+            font-size: 20px;
+            margin: 40px 0 20px;
+            color: #005ea5;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        /* 单个人员卡片 */
+        .staff-card {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 25px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            align-items: flex-start;
+            background-color: #fff;
+        }
+
+        /* 人员头像 */
+        .staff-img {
+            width: 150px;
+            height: 200px;
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #f0f5fa;
+        }
+
+        .staff-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 保持图片比例不变形 */
+        }
+
+        /* 人员信息 */
+        .staff-info h3 {
+            font-size: 18px;
+            color: #005ea5;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 8px;
+        }
+
+        .staff-basic {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .staff-contact {
+            margin: 15px 0;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .staff-contact p {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .staff-contact i {
+            color: #005ea5;
+            width: 20px;
+            text-align: center;
+        }
+
+        .staff-duties h4, .staff-achievement h4 {
+            font-size: 16px;
+            color: #555;
+            margin: 15px 0 8px;
+            font-weight: 600;
+        }
+
+        .staff-link {
+            color: #005ea5;
+            text-decoration: none;
+        }
+
+        .staff-link:hover {
+            text-decoration: underline;
+        }
+
+        
+        /* 响应式适配（手机端） */
+        @media (max-width: 768px) {
+            .staff-card {
+                grid-template-columns: 1fr;
+            }
+            .staff-img {
+                margin: 0 auto;
+            }
+            .menu-list {
+                flex-wrap: wrap;
+            }
+            .menu-item a {
+                padding: 12px 15px;
+            }
+            .header-top {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ========== 顶部头部（和首页完全一致） ========== -->
+<div class="header-top">
+    <div class="logo">
+        <h1>溪城大学图书馆</h1>
+    </div>
+    <div class="header-right">
+        <a href="contact-us.html">联系我们</a>
+        <a href="#">微信公众号</a>
+    </div>
+</div>
+
+<!-- 顶部导航栏（带图标，“联系我们”高亮） -->
+<div class="main-nav-container">
+    <nav class="top-nav">
+        <ul class="menu-list">
+            <!-- 导航栏里的首页链接 -->
+            <li class="menu-item"><a href="index.html"><i class="fa fa-home"></i> 首页</a></li>
+            <li class="menu-item"><a href="#"><i class="fa fa-book"></i> 资源</a></li>
+            <li class="menu-item"><a href="#"><i class="fa fa-puzzle-piece"></i> 服务</a></li>
+            <!-- 首页/联系我们里的“关于本馆”链接要改成： -->
+<li class="menu-item"><a href="pages/friend-links/about-us.html"><i class="fa fa-question-circle"></i> 关于本馆</a></li>
+            <li class="menu-item active"><a href="contact-us.html"><i class="fa fa-user"></i> 联系我们</a></li>
+        </ul>
+    </nav>
+</div>
+
+    <!-- 主内容区 -->
+    <div class="content-wrap">
+        <div class="card">
+            <!-- 基础联系信息（一行排版） -->
+            <h2>基础信息</h2>
+            <div class="basic-contact">
+                <div class="contact-item">
+                    <i class="fa fa-map-marker-alt"></i>
+                    <span>地址：溪城大学行政楼A座302室</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fa fa-phone"></i>
+                    <span>总机：021-66135000</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fa fa-envelope"></i>
+                    <span>官方邮箱：lib@scu.edu.cn</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fa fa-clock"></i>
+                    <span>工作时间：周一至周五 9:00-17:00</span>
+                </div>
+            </div>
+
+            <!-- 馆务人员介绍板块 -->
+            <h2 class="staff-title">馆务人员介绍</h2>
+
+            <!-- 1. 馆长：杜眷 -->
+            <div class="staff-card">
+                <div class="staff-img">
+                    <img src="dj.jpg" alt="杜眷">
+                </div>
+                <div class="staff-info">
+                    <h3>馆长：杜眷</h3>
+                    <div class="staff-basic">
+                        男，54岁，文学博士，教授，博士生导师。2015年入职本校图书馆，历任资源建设中心主任、信息服务中心主任，2015年起任图书馆馆长。兼任校学术委员会委员、文献信息研究所所长。
+                    </div>
+                    <div class="staff-contact">
+                        <p><i class="fa fa-phone"></i> 座机：6613-5000</p>
+                        <p><i class="fa fa-envelope"></i> 邮箱：du.juan@xcu.edu.cn</p>
+                    </div>
+                    <div class="staff-achievement">
+                        <h4>学术成就：</h4>
+                        <p>研究领域横跨古典文献学、数字人文、高等教育管理，近年主持国家社科基金项目2项、省部级课题5项，在《中国图书馆学报》《大学图书馆学报》等核心期刊发表论文四十余篇，出版专著《文献传承与现代学术转向》《高校知识服务生态构建研究》等。曾获评“省级优秀教育工作者”“高校图书馆榜样馆长”等荣誉称号。欢迎诸位杰出学者移步博客进行批评指正 <a href="pages/friend-links/dujuan-blog.html" class="staff-link" target="_blank">http://blog.scu.edu.cn/dujuan</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. 办公室主任：陈文瀚 -->
+            <div class="staff-card">
+                <div class="staff-img">
+                    <img src="cwh.jpg" alt="陈文瀚">
+                </div>
+                <div class="staff-info">
+                    <h3>办公室主任：陈文瀚</h3>
+                    <div class="staff-basic">
+                        男，45岁，图书馆学硕士，副研究员。2005年入职本校图书馆，历任读者服务中心副主任、资源建设中心主任，2019年起任办公室主任。
+                    </div>
+                    <div class="staff-contact">
+                        <p><i class="fa fa-phone"></i> 座机：6613-5001</p>
+                        <p><i class="fa fa-envelope"></i> 邮箱：wenhan.chen@scu.edu.cn</p>
+                    </div>
+                    <div class="staff-duties">
+                        <h4>主要职责：</h4>
+                        <p>统筹全馆九大重点工作的计划制定与进度跟进；负责人事、行政、总务、文档、资产及安全管理；承担图书馆文化建设和学科建设的协调工作；为馆领导提供决策支持。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. 督察室主任：季芸竹 -->
+            <div class="staff-card">
+                <div class="staff-img">
+                    <img src="jyz.jpg" alt="季芸竹">
+                </div>
+                <div class="staff-info">
+                    <h3>督察室主任：季芸竹</h3>
+                    <div class="staff-basic">
+                        女，41岁，管理学硕士，副研究馆员。2007年入职，曾任读者服务中心副主任，2018年起负责督察室工作。
+                    </div>
+                    <div class="staff-contact">
+                        <p><i class="fa fa-phone"></i> 座机：6613-5002</p>
+                        <p><i class="fa fa-envelope"></i> 邮箱：yunzhu.ji@scu.edu.cn</p>
+                    </div>
+                    <div class="staff-duties">
+                        <h4>主要职责：</h4>
+                        <p>监督检查图书馆各项工作的落实情况；督查馆务办公会议决议的执行；督查各部门人员工作业绩，提出聘任、解聘与奖惩建议；对各种考核、考评进行督察；负责对图书馆工作中的重大、热门、顽固性及战略性问题的专项督察；接受读者、员工的投诉与申诉。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. 读者服务中心主任：魏书妍 -->
+            <div class="staff-card">
+                <div class="staff-img">
+                    <img src="wsy.jpg" alt="魏书妍">
+                </div>
+                <div class="staff-info">
+                    <h3>读者服务中心主任：魏书妍</h3>
+                    <div class="staff-basic">
+                        女，38岁，图书馆学学士，馆员。2010年入职，长期从事读者服务工作，2020年起担任读者服务中心主任。
+                    </div>
+                    <div class="staff-contact">
+                        <p><i class="fa fa-phone"></i> 电话：6613-5003</p>
+                        <p><i class="fa fa-envelope"></i> 邮箱：shuyan.wei@scu.edu.cn</p>
+                    </div>
+                    <div class="staff-duties">
+                        <h4>主要职责：</h4>
+                        <p>统筹书刊借阅服务；处理读者咨询；组织馆藏整理与管理；协调馆际互借与文献传递；保障各类读者常规服务质量，及时发现并弥补服务阙漏；负责读者满意度调查与服务质量改进。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. 信息服务中心主任：沈睿韬 -->
+            <div class="staff-card">
+                <div class="staff-img">
+                    <img src="srt.jpg" alt="沈睿韬">
+                </div>
+                <div class="staff-info">
+                    <h3>信息服务中心主任：沈睿韬</h3>
+                    <div class="staff-basic">
+                        男，41岁，计算机应用技术硕士，高级工程师。2008年入职本校图书馆，长期从事图书馆信息化建设与系统运维工作，2020年起担任信息服务中心主任。
+                    </div>
+                    <div class="staff-contact">
+                        <p><i class="fa fa-phone"></i> 电话：6613-5028</p>
+                        <p><i class="fa fa-envelope"></i> 邮箱：shen.ruitao@scu.edu.cn</p>
+                    </div>
+                    <div class="staff-duties">
+                        <h4>主要职责：</h4>
+                        <p>统筹计算机及网络系统管理与维护；负责图书馆数字化建设项目的规划与实施；组织参考咨询及情报服务；管理图书馆各类数据库平台的访问权限；负责图书馆官方网站、移动端应用的开发与运维；保障电子资源远程访问系统的稳定运行；推动超新技术在图书馆服务中的应用与创新。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 在<head>里加字体CDN -->
+<link href="https://cdn.bootcdn.net/ajax/libs/webfonts/1.6.28/fonts/zcool-gothic/zcool-gothic.css" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>点阵滴血红逐行显示（最后一行逐字蹦出）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #fff;
+            min-height: 100vh;
+            position: relative;
+            padding: 0;
+        }
+
+        /* 引入点阵字体 */
+        @font-face {
+            font-family: 'MyPixelFont';
+            src: url('./fonts/精品点阵体 简 9×9 Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            -webkit-font-smoothing: none;
+            font-smoothing: none;
+        }
+
+        /* 核心样式：应用点阵字体 + 滴血红 */
+        .pixel-text,
+        .pixel-text * { /* 强制所有子元素继承字体 */
+            font-family: 'MyPixelFont', monospace !important;
+        }
+
+        .pixel-text {
+            font-size: 14px;
+            font-weight: normal;
+            color: #d62828; /* 滴血红，匹配图片 */
+            line-height: 1.6;
+            cursor: pointer;
+            white-space: pre-line;
+            letter-spacing: 1px;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        /* 逐行闪烁动画（滴血红系） */
+        @keyframes lineFlash {
+            0% { opacity: 0; color: #f77f7f; }
+            50% { opacity: 1; color: #d62828; }
+            100% { opacity: 1; color: #d62828; }
+        }
+        .line-flash {
+            animation: lineFlash 0.4s ease-in-out;
+        }
+
+        /* 逐字蹦出动画（每个字淡入） */
+        @keyframes charPop {
+            0% { opacity: 0; transform: translateX(5px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        .char-item {
+            display: inline-block; /* 保留空格，逐字显示 */
+            animation: charPop 0.3s ease-in-out forwards;
+            opacity: 0; /* 默认隐藏，动画触发后显示 */
+            margin-right: 12px; /* 字间距（除最后一个字） */
+        }
+        /* 最后一个字移除右边距，让光标紧贴 */
+        .char-item:last-child {
+            margin-right: 0px !important;
+        }
+
+        /* 完全复用你指定的光标闪烁样式 */
+        .pixel-text::after {
+            content: '|';
+            color: #d62828; /* 光标和文字同色 */
+            font-size: 14px;
+            line-height: 1.6;
+            margin-left: 0px !important; /* 紧贴最后一字，替换原2px */
+            opacity: 0;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .show-cursor::after {
+            opacity: 1;
+            animation: blink 1s step-end infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="pixel-text" id="textContainer">
+        别假装看不见我：）
+    </div>
+
+    <script>
+        const textContainer = document.getElementById('textContainer');
+        let isTriggered = false;
+        const textLines = [
+            '别假装看不见我：）',
+            '你看Π我了',
+            '你丯见我了',
+            '你看见我孑',
+            '我看见你了' // 最后一行：逐字蹦出
+        ];
+        let currentLine = 0;
+
+        textContainer.addEventListener('click', function() {
+            if (!isTriggered) {
+                isTriggered = true;
+                startShowLines();
+            }
+        });
+
+        // 逐行显示逻辑
+        function startShowLines() {
+            currentLine++;
+            // 前4行：完全保留原有逻辑
+            if (currentLine < textLines.length - 1) {
+                const newText = textLines.slice(0, currentLine + 1).join('\n');
+                const lines = newText.split('\n');
+                textContainer.innerHTML = lines.map((line, index) => {
+                    if (index === currentLine) {
+                        return `<span class="line-flash">${line}</span>`;
+                    }
+                    return line;
+                }).join('\n');
+                setTimeout(startShowLines, 300);
+            } 
+            // 最后一行：精准控制光标闪烁+1.5秒后跳转
+            else if (currentLine === textLines.length - 1) {
+                // 先把前4行原样渲染出来
+                textContainer.innerHTML = textLines.slice(0, currentLine).join('\n') + '\n';
+
+                const lastLineText = textLines[currentLine];
+                const charArray = lastLineText.split(''); // ["我","看","见","你","了"]
+                let charIndex = 0;
+
+                function showNextChar() {
+                    if (charIndex < charArray.length) {
+                        // 创建字元素，添加动画
+                        const charItem = document.createElement('span');
+                        charItem.className = 'char-item';
+                        // 最后一个字移除右边距，让光标紧贴
+                        if (charIndex === charArray.length - 1) {
+                            charItem.style.marginRight = '0px';
+                        }
+                        charItem.style.animationDelay = `${charIndex * 0.3}s`; 
+                        charItem.textContent = charArray[charIndex];
+                        
+                        // 添加到最后一行
+                        textContainer.appendChild(charItem);
+                        
+                        charIndex++;
+                        setTimeout(showNextChar, 300); 
+                    } else {
+                        // 等最后一个字完全显示+动画结束后，显示光标（开始闪烁）
+                        setTimeout(() => {
+                            textContainer.classList.add('show-cursor');
+                            // 光标持续闪烁1.5秒（1500ms）后跳转
+                            setTimeout(() => {
+                                window.open('pages/friend-links/quzi-contactus.html', '_blank');
+                            }, 1500);
+                        }, 1800);
+                    }
+                }
+                showNextChar();
+            }
+        }
+    </script>
+</body>
+</html>
+</body>
+</html>

@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap " rel="stylesheet">
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>解谜图书馆 - 仿溪城图书馆</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css ">
+    <style>
+        /* 完全保留原始样式，仅新增遮罩层 */
+        .banner {
+            position: relative; /* 遮罩层定位用 */
+        }
+        .banner-img {
+            width: 100%;
+            height: auto; /* 保留原始图片尺寸 */
+            display: block;
+        }
+        /* 闪白遮罩层：自适应图片高度 */
+        .flash-mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff; /* 纯白带 */
+            z-index: 9999; /* 最高层级 */
+            display: none;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <header class="header-top">
+        <div class="logo">
+            <h1>溪城大学图书馆</h1>
+        </div>
+        <div class="header-right">
+            <a href="#" class="contact">联系我们</a>
+            <a href="#" class="wechat">微信公众号</a>
+        </div>
+    </header>
+
+    <div class="main-nav-container">
+        <nav class="top-nav">
+            <ul class="menu-list">
+                <li class="menu-item active"><a href="#"><i class="fa fa-home"></i> 首页</a></li>
+                <li class="menu-item"><a href="#"><i class="fa fa-book"></i> 资源</a></li>
+                <li class="menu-item"><a href="#"><i class="fa fa-puzzle-piece"></i> 服务</a></li>
+                <li class="menu-item"><a href="pages/friend-links/about-us.html"><i class="fa fa-question-circle"></i> 关于本馆</a></li>
+                <li class="menu-item"><a href="contact-us.html"><i class="fa fa-user"></i> 联系我们</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="banner">
+        <img class="banner-img" src="library.jpg" alt="溪城大学图书馆外景" id="bannerImg">
+        <div class="flash-mask" id="flashMask"></div>
+    </div>
+
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" placeholder="馆藏书目查询" id="bookSearchInput">
+            <button id="bookSearchBtn"><i class="fa fa-search"></i></button>
+        </div>
+    </div>
+
+<script>
+window.addEventListener('load', function() {
+  const bannerImg = document.getElementById('bannerImg');
+  const flashMask = document.getElementById('flashMask');
+
+  // 避免重复执行
+  if (localStorage.getItem('flash_done')) {
+    bannerImg.src = 'library-quiz.jpg';
+    return;
+  }
+
+  let hasFlashed = false;
+  const newImg = new Image();
+  newImg.src = 'library-quiz.jpg';
+  newImg.onload = function() {
+    bannerImg.onload = triggerFlash;
+    if (bannerImg.complete) triggerFlash();
+  };
+
+  function triggerFlash() {
+    if (hasFlashed) return;
+    hasFlashed = true;
+
+    const isLoginSuccess = sessionStorage.getItem('libraryImgChanged') === 'true' 
+                        || localStorage.getItem('libraryImgChanged') === 'true';
+    if (!isLoginSuccess) return;
+
+    const flashTime = 50; // ← 在这里修改时长（毫秒）
+
+    // 显示白屏
+    flashMask.style.display = 'block';
+
+    // 等待下一帧，确保白屏已绘制到屏幕上
+    requestAnimationFrame(() => {
+      // 现在白屏真正可见，开始计时
+      setTimeout(() => {
+        flashMask.style.display = 'none';
+        bannerImg.src = newImg.src;
+        localStorage.setItem('flash_done', '1');
+      }, flashTime);
+    });
+  }
+});
+</script>
+
+<div class="info-links-container">
+    <div class="info-section">
+        <div class="section-header">
+            <h3>通知公告</h3>
+            <a href="#" class="more-btn">more <i class="fa fa-plus"></i></a>
+        </div>
+        <ul class="info-list">
+            <li class="info-item">
+                <span class="info-text">关于2026年图书馆寒假开放的通知</span>
+                <span class="info-date">2026/01/15</span>
+            </li>
+            <li class="info-item">
+                <span class="info-text">图书馆管理系统数据迁移期间暂停流通服务的通知</span>
+                <span class="info-date">2026/01/12</span>
+            </li>
+            <li class="info-item">
+                <span class="info-text">书卷含情，翰墨铭恩——致敬所有关爱上大图书馆的...</span>
+                <span class="info-date">2026/01/01</span>
+            </li>
+            <li class="info-item">
+                <span class="info-text">关于2026年图书馆元旦放假安排的通知</span>
+                <span class="info-date">2025/12/29</span>
+            </li>
+            <li class="info-item">
+                <span class="info-text">关于图书馆管理系统切换期间部分服务调整的通知</span>
+                <span class="info-date">2025/12/23</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="links-section">
+        <div class="section-header">
+            <h3>友情链接</h3>
+            <a href="#" class="more-btn">more <i class="fa fa-plus"></i></a>
+        </div>
+        <ul class="links-list">
+            <li class="links-item">
+                 <a href="pages/friend-links/edu-login.html" target="_blank" class="links-text">教务系统</a>
+            </li>
+            <li class="links-item">
+                <a href="pages/friend-links/campus-forum.html" target="_blank" class="links-text">校园论坛</a>
+            </li>
+            <li class="links-item">
+                <span class="links-text">万方数据知识服务平台</span>
+            </li>
+            <li class="links-item">
+                <span class="links-text">超星读书馆</span>
+            </li>
+            <li class="links-item">
+                <span class="links-text">国家数字图书馆</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="database-container">
+    <div class="database-header">
+        <h3>常用数据库</h3>
+    </div>
+    <div class="database-list">
+        <div class="database-col">
+            <a href="https://www.cnki.net/ " target="_blank" class="database-item">
+                <i class="fa fa-arrow-right"></i> 中国知网（CNKI）
+            </a>
+            <div class="database-item">
+                <i class="fa fa-arrow-right"></i> Springer
+            </div>
+            <div class="database-item">
+                <i class="fa fa-arrow-right"></i> EBSCO
+            </div>
+        </div>
+        <div class="database-col">
+            <div class="database-item">
+                <i class="fa fa-arrow-right"></i> ScienceDirect
+            </div>
+            <div class="database-item">
+                <i class="fa fa-arrow-right"></i> Wiley
+            </div>
+            <div class="database-item">
+                <i class="fa fa-arrow-right"></i> 读秀搜索
+            </div>
+        </div>
+        <div class="database-col">
+            <div class="database-item">
+                <i class="fa fa-arrow-right"></i> Web of Science
+            </div>
+            <div class="database-item">
+                <i class="fa fa-arrow-right"></i> Taylor & Francis
+            </div>
+            <a href="http://dh.ersjk.com/ " target="_blank" class="database-item">
+                <i class="fa fa-arrow-right"></i> 中国基本古籍库
+            </a>
+        </div>
+        <div class="database-col">
+            <div class="database-item">
+                <i class="fa fa-arrow-right"></i> Scopus
+            </div>
+            <div class="database-item">
+                <i class="fa fa-arrow-right"></i> Gale
+            </div>
+            <div class="database-item">
+                <i class="fa fa-arrow-right"></i> 多媒体资源
+            </div>
+        </div>
+    </div>
+</div>
+
+    <footer class="footer">
+        <p>© 2026 解谜图书馆 | 仿溪城大学图书馆界面 - 网页解谜游戏</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>  
