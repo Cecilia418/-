@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>孙君昊 · 灵堂</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            font-family: "SimSun", "宋体", serif;
+            min-height: 100vh;
+        }
+
+        .fade-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            z-index: 10000;
+            pointer-events: none;
+            opacity: 1;
+            animation: pageFadeIn 1.5s ease-in-out forwards;
+        }
+
+        @keyframes pageFadeIn {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .fullscreen-image {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .fullscreen-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .black-section {
+            width: 100%;
+            background-color: #000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10vh 5vw;
+            font-size: 26px;
+            line-height: 2.3;
+            text-align: center;
+            white-space: nowrap; /* 强制不换行 */
+        }
+
+        .poem-line {
+            width: 100%;
+            text-align: center;
+            white-space: nowrap; /* 强制整行不换行 */
+        }
+
+        .poem-line span {
+            display: inline-block;
+            color: #666;
+            transition: all 1.2s ease-out;
+            opacity: 0.6;
+        }
+
+        /* 发光效果 */
+        .poem-line span.active {
+            color: #fff;
+            opacity: 1;
+            text-shadow: 
+                0 0 10px rgba(255,255,255,0.9),
+                0 0 20px rgba(255,255,255,0.7),
+                0 0 30px rgba(255,255,255,0.5);
+        }
+    </style>
+</head>
+<body>
+
+<div class="fade-overlay"></div>
+
+<div class="fullscreen-image">
+    <img src="../../picture/孙君昊灵堂.jpg" alt="孙君昊灵堂">
+</div>
+
+<div class="black-section">
+    <!-- 第一行：完整一行，绝不换行 -->
+    <div class="poem-line">
+        <span>幸运的一天</span>
+        <span>天空下起大雨</span>
+        <span>雨水浇灌土地</span>
+        <span>地里你种下好多花</span>
+        <span>花园里的花总是缺一盆的</span>
+    </div>
+
+    <!-- 第二行：完整一行 -->
+    <div class="poem-line">
+        <span>幸运的一天</span>
+        <span>天底下还有这么好的事</span>
+        <span>事务所关门</span>
+        <span>门口盆栽随便选</span>
+        <span>选择困难症</span>
+    </div>
+
+    <!-- 第三行：完整一行 -->
+    <div class="poem-line">
+        <span>不幸运的遗体</span>
+        <span>原来天上落下的</span>
+        <span>不只是馅饼</span>
+    </div>
+</div>
+
+<script>
+    const allSpans = document.querySelectorAll('.poem-line span');
+    let animated = false;
+
+    checkScroll();
+    window.addEventListener('scroll', checkScroll);
+
+    function checkScroll() {
+        if (animated) return;
+        const section = document.querySelector('.black-section');
+        const rect = section.getBoundingClientRect();
+        
+        if (rect.top < window.innerHeight - 100) {
+            animated = true;
+            allSpans.forEach((span, i) => {
+                setTimeout(() => {
+                    span.classList.add('active');
+                }, i * 1000);
+            });
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIBRARY · 回车验证</title>
+    <style>
+        /* 极简重置，无阴影无渐变，纯硬边风格 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #8B0000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Noto Serif SC', '楷体', 'KaiTi', '华文楷体', serif;
+            padding: 20px;
+        }
+
+        /* LIBRARY 标题 */
+        .library-title {
+            color: #ffffff;
+            font-size: 3.5rem;
+            font-weight: 600;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            text-shadow: none;
+            border: none;
+        }
+
+        /* 5×9 格子图案 */
+        .grid-pattern {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 50px;
+        }
+
+        .grid-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .grid-cell {
+            width: 70px;
+            height: 45px;
+            border: 2px solid #ffffff;
+            background-color: transparent;
+            flex-shrink: 0;
+        }
+
+        /* 四个米字格容器 */
+        .hanzi-section {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        /* 单个米字格 */
+        .mizi-cell {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            border: 3px solid #ffffff;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 米字交叉线 */
+        .mizi-cross {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .mizi-cross::before,
+        .mizi-cross::after {
+            content: '';
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.6);
+            left: 0;
+            width: 100%;
+            height: 1px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .mizi-cross::before {
+            transform: rotate(45deg);
+            width: 141%;
+            left: -20%;
+            top: 45%;
+        }
+
+        .mizi-cross::after {
+            transform: rotate(-45deg);
+            width: 141%;
+            left: -20%;
+            top: 45%;
+        }
+
+        .mizi-cross .vertical-line {
+            position: absolute;
+            width: 1px;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.6);
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+
+        .mizi-cross .horizontal-line {
+            position: absolute;
+            height: 1px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.6);
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        /* 汉字显示区域 - 每个格子一个，只用于显示 */
+        .hanzi-display {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #ffffff;
+            z-index: 5;
+            position: relative;
+            font-family: 'Noto Serif SC', '楷体', 'KaiTi', serif;
+            pointer-events: none;  /* 让点击穿透到父容器 */
+        }
+
+        /* 隐形全局输入器 - 用于捕获输入 */
+        .global-input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+        }
+
+        /* 让米字格区域可点击 */
+        .hanzi-section {
+            position: relative;
+            z-index: 10;
+        }
+
+        .mizi-cell {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- LIBRARY 标题 -->
+    <div class="library-title">LIBRARY</div>
+
+    <!-- 5×9 格子图案 -->
+    <div class="grid-pattern" id="gridPattern"></div>
+
+    <!-- 四个独立的米字格（只用于显示） -->
+    <div class="hanzi-section" id="hanziSection">
+        <div class="mizi-cell" id="cell1">
+            <div class="mizi-cross">
+                <div class="vertical-line"></div>
+                <div class="horizontal-line"></div>
+            </div>
+            <div class="hanzi-display" id="display1"></div>
+        </div>
+        <div class="mizi-cell" id="cell2">
+            <div class="mizi-cross">
+                <div class="vertical-line"></div>
+                <div class="horizontal-line"></div>
+            </div>
+            <div class="hanzi-display" id="display2"></div>
+        </div>
+        <div class="mizi-cell" id="cell3">
+            <div class="mizi-cross">
+                <div class="vertical-line"></div>
+                <div class="horizontal-line"></div>
+            </div>
+            <div class="hanzi-display" id="display3"></div>
+        </div>
+        <div class="mizi-cell" id="cell4">
+            <div class="mizi-cross">
+                <div class="vertical-line"></div>
+                <div class="horizontal-line"></div>
+            </div>
+            <div class="hanzi-display" id="display4"></div>
+        </div>
+    </div>
+
+    <!-- 全局隐形输入框，用于捕获一次性输入 -->
+    <input type="text" id="globalInput" class="global-input" maxlength="4" autocomplete="off" inputmode="text">
+
+    <script>
+        (function() {
+            // 生成5x9格子
+            const gridContainer = document.getElementById('gridPattern');
+            for (let r = 0; r < 5; r++) {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'grid-row';
+                for (let c = 0; c < 9; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'grid-cell';
+                    rowDiv.appendChild(cell);
+                }
+                gridContainer.appendChild(rowDiv);
+            }
+
+            // 正确答案
+            const ANSWER = ['鸠', '占', '鹊', '巢'];
+            const TARGET_URL = 'quiz3-forum.html';
+
+            // 获取四个显示格子
+            const displays = [
+                document.getElementById('display1'),
+                document.getElementById('display2'),
+                document.getElementById('display3'),
+                document.getElementById('display4')
+            ];
+
+            // 获取四个米字格容器
+            const cells = [
+                document.getElementById('cell1'),
+                document.getElementById('cell2'),
+                document.getElementById('cell3'),
+                document.getElementById('cell4')
+            ];
+
+            // 获取全局隐形输入框
+            const globalInput = document.getElementById('globalInput');
+
+            // 当前存储的汉字（用于回车验证）
+            let currentChineseText = '';
+
+            // 点击任何一个米字格，聚焦到全局输入框
+            cells.forEach(cell => {
+                cell.addEventListener('click', () => {
+                    globalInput.focus();
+                });
+            });
+
+            // 判断是否为汉字
+            function isChineseChar(char) {
+                if (!char) return false;
+                const code = char.charCodeAt(0);
+                return code >= 0x4E00 && code <= 0x9FFF;
+            }
+
+            // 更新四个格子的显示
+            function updateDisplays(text) {
+                // 只保留汉字
+                let chineseOnly = '';
+                for (let i = 0; i < text.length; i++) {
+                    if (isChineseChar(text[i]) && chineseOnly.length < 4) {
+                        chineseOnly += text[i];
+                    }
+                }
+                
+                // 清空所有格子
+                displays.forEach(d => d.textContent = '');
+                
+                // 依次填入汉字
+                for (let i = 0; i < chineseOnly.length; i++) {
+                    displays[i].textContent = chineseOnly[i];
+                }
+                
+                // 更新存储的当前文本
+                currentChineseText = chineseOnly;
+                
+                // 返回纯汉字字符串
+                return chineseOnly;
+            }
+
+            // 监听全局输入框的输入事件（实时显示，但不验证）
+            globalInput.addEventListener('input', function(e) {
+                const raw = e.target.value;
+                const chineseText = updateDisplays(raw);
+                
+                // 将全局输入框也修正为纯汉字（最多4字）
+                if (raw !== chineseText) {
+                    globalInput.value = chineseText;
+                }
+                
+                // 注意：这里不进行验证，只更新显示
+            });
+
+            // 验证答案（回车时调用）
+            function verifyAnswer() {
+                // 使用当前显示的文本（currentChineseText）
+                if (currentChineseText.length !== 4) {
+                    // 如果不足4字，可以轻提示或者忽略
+                    return;
+                }
+                
+                // 将当前文本转为字符数组比较
+                const inputChars = currentChineseText.split('');
+                const correct = inputChars.every((char, idx) => char === ANSWER[idx]);
+                
+                if (correct) {
+                    // 正确跳转
+                    window.location.href = TARGET_URL;
+                } else {
+                    // 错误弹窗
+                    alert('蠢东西，再想想');
+                    // 清空所有
+                    globalInput.value = '';
+                    displays.forEach(d => d.textContent = '');
+                    currentChineseText = '';
+                    globalInput.focus();
+                }
+            }
+
+            // 监听回车键
+            globalInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault(); // 防止任何默认行为
+                    verifyAnswer();
+                }
+            });
+
+            // 处理粘贴等情况
+            globalInput.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const pasted = (e.clipboardData || window.clipboardData).getData('text');
+                let chineseOnly = '';
+                for (let i = 0; i < pasted.length; i++) {
+                    if (isChineseChar(pasted[i]) && chineseOnly.length < 4) {
+                        chineseOnly += pasted[i];
+                    }
+                }
+                globalInput.value = chineseOnly;
+                updateDisplays(chineseOnly);
+                // 不自动验证，等待回车
+            });
+
+            // 初始状态
+            globalInput.value = '';
+            displays.forEach(d => d.textContent = '');
+            currentChineseText = '';
+
+            // 注意：不自动聚焦，等待用户点击格子
+        })();
+    </script>
+</body>
+</html>

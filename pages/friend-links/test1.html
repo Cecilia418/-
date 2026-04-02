@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>陷阱</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100%;
+            background-color: #000000;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Times New Roman', '黑体', 'Microsoft YaHei', sans-serif;
+            padding: 0;
+            overflow-x: auto;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* 整体缩放容器 - 包含图片和文字 */
+        .scale-container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-origin: center center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 图片和文字的包装器，用于相对定位 */
+        .content-wrapper {
+            position: relative;
+            width: min(95vw, 95vh);
+            height: min(95vw, 95vh);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 背景图片 - 绝对定位在文字下方 */
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .background-image img {
+            width: 200%;
+            height: 200%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 陷阱文字 - 在图片上方 */
+        .trap-text {
+            position: relative;
+            z-index: 2;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: min(95vw, 95vh);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            line-height: 1;
+            text-align: center;
+            user-select: none;
+            white-space: nowrap;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-shadow: 0 0 20px rgba(0,0,0,0.5);
+            width: 100%;
+            height: 100%;
+        }
+
+        .trap-word {
+            display: inline-block;
+        }
+
+        .trap-word:first-child {
+            margin-right: 0.1em;
+        }
+
+        /* 纯色暗红闪屏层 */
+        .flash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #a80000; /* 直接设置为暗红色 */
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.1s ease;
+        }
+
+        .flash-overlay.active {
+            animation: pageFlash 0.5s forwards;
+        }
+
+        @keyframes pageFlash {
+            0%   { opacity: 0; }
+            10%  { opacity: 1; }
+            90%  { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* 缩放控制面板 */
+        .zoom-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            padding: 8px 15px;
+            color: white;
+            font-size: 14px;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(5px);
+            pointer-events: auto;
+        }
+
+        .zoom-control button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .zoom-control button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .zoom-control .zoom-value {
+            min-width: 60px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- 闪屏遮罩层 -->
+    <div class="flash-overlay" id="flashOverlay"></div>
+
+    <!-- 整体缩放容器 - 图片和文字一起缩放 -->
+    <div class="scale-container" id="scaleContainer">
+        <div class="content-wrapper">
+            <!-- 背景图片层 - 在文字下方，透明度50% -->
+            <div class="background-image" id="bgImage">
+                <img src="../../picture/假连翘.jpg" alt="假连翘" id="bgImg">
+            </div>
+            
+            <!-- 陷阱文字 -->
+            <div class="trap-text" id="trapText">
+                <span class="trap-word">陷</span>
+                <span class="trap-word">饼</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="zoom-control">
+        <button id="zoomOutBtn">−</button>
+        <span class="zoom-value" id="zoomValue">500%</span>
+        <button id="zoomInBtn">+</button>
+        <button id="zoomResetBtn" style="margin-left:5px; width:auto; padding:0 10px; border-radius:15px;">重置</button>
+    </div>
+
+    <script>
+        (function() {
+            // 获取元素
+            const scaleContainer = document.getElementById('scaleContainer');
+            const zoomValueDisplay = document.getElementById('zoomValue');
+            const zoomInBtn = document.getElementById('zoomInBtn');
+            const zoomOutBtn = document.getElementById('zoomOutBtn');
+            const zoomResetBtn = document.getElementById('zoomResetBtn');
+            const flashOverlay = document.getElementById('flashOverlay');
+            const bgImg = document.getElementById('bgImg');
+            
+            // 当前缩放比例
+            let currentZoom = 500; // 初始500%
+            
+            // 标记是否已经触发过50%事件
+            let fiftyPercentTriggered = false;
+            
+            // 标记是否已经切换过图片
+            let imageChanged = false;
+            
+            // 应用缩放
+            function applyZoom(zoomPercent) {
+                // 限制缩放范围 (50% - 500%)
+                if (zoomPercent < 50) zoomPercent = 50;
+                if (zoomPercent > 500) zoomPercent = 500;
+                
+                const oldZoom = currentZoom;
+                currentZoom = zoomPercent;
+                
+                // 使用 transform scale 来缩放整个容器（图片和文字一起缩放）
+                const scale = zoomPercent / 100;
+                scaleContainer.style.transform = `scale(${scale})`;
+                
+                // 更新显示
+                zoomValueDisplay.textContent = currentZoom + '%';
+                
+                console.log('应用缩放: ' + currentZoom + '%');
+                
+                // 检查是否缩放到50%且尚未触发事件
+                if (currentZoom === 50 && !fiftyPercentTriggered) {
+                    fiftyPercentTriggered = true;
+                    console.log('触发50%缩放事件：等待2秒后闪屏并切换图片');
+                    
+                    // 停留2秒后触发闪屏并立即切换图片
+                    setTimeout(function() {
+                        // 先切换图片（在闪屏期间完成）
+                        if (!imageChanged) {
+                            bgImg.src = '../../picture/碎假连翘.jpg';
+                            imageChanged = true;
+                            console.log('图片已切换为: 碎假连翘.jpg');
+                        }
+                        
+                        // 触发闪屏动画
+                        flashOverlay.classList.add('active');
+                        
+                        // 闪屏结束后移除类（但图片已经换了）
+                        setTimeout(function() {
+                            flashOverlay.classList.remove('active');
+                        }, 500); // 闪屏动画持续0.5秒
+                        
+                    }, 2000); // 停留2秒
+                }
+            }
+            
+            // 初始化: 设置初始缩放500%
+            applyZoom(500);
+            
+            // 缩放控制按钮
+            zoomInBtn.addEventListener('click', function() {
+                applyZoom(currentZoom + 50);
+            });
+            
+            zoomOutBtn.addEventListener('click', function() {
+                applyZoom(currentZoom - 50);
+            });
+            
+            zoomResetBtn.addEventListener('click', function() {
+                applyZoom(100); // 重置到100% (充满屏幕)
+            });
+            
+            // 键盘快捷键支持 (Ctrl +/-)
+            document.addEventListener('keydown', function(e) {
+                // Ctrl + 加号
+                if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '=')) {
+                    e.preventDefault();
+                    applyZoom(currentZoom + 50);
+                }
+                // Ctrl + 减号
+                else if ((e.ctrlKey || e.metaKey) && (e.key === '-' || e.key === '_')) {
+                    e.preventDefault();
+                    applyZoom(currentZoom - 50);
+                }
+                // Ctrl + 0 重置
+                else if ((e.ctrlKey || e.metaKey) && (e.key === '0')) {
+                    e.preventDefault();
+                    applyZoom(100);
+                }
+            });
+            
+            // 添加鼠标滚轮 + Ctrl 缩放支持
+            document.addEventListener('wheel', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    e.preventDefault();
+                    if (e.deltaY < 0) {
+                        // 向上滚动 - 放大
+                        applyZoom(currentZoom + 50);
+                    } else {
+                        // 向下滚动 - 缩小
+                        applyZoom(currentZoom - 50);
+                    }
+                }
+            }, { passive: false });
+            
+        })();
+    </script>
+</body>
+</html>

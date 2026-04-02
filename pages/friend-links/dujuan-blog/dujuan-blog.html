@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>杜眷的博客</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:"SimSun",宋体,Arial,sans-serif;
+    font-size:15px; /* 全局字体放大 */
+    color:#333;
+    background:#e8f4fc url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Cpath fill="%23fff" opacity="0.6" d="M30,20 Q40,5 50,20 T70,20 Q80,35 70,50 T50,80 Q30,65 30,50 T30,20"/%3E%3C/svg%3E') repeat-x bottom;
+    background-size:200px;
+    min-height:100vh; /* 填满屏幕 */
+}
+.blog-header{
+    background:linear-gradient(to bottom,#f0f0f0,#e0e0e0);
+    padding:25px; /* 头部放大 */
+    border-bottom:1px solid #ccc;
+}
+.header-inner{
+    max-width:1200px; /* 整体页面加宽 */
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+    gap:25px;
+}
+.avatar{
+    width:140px; /* 头像放大 */
+    height:140px;
+    border:1px solid #ccc;
+    background:#fff;
+    padding:2px;
+}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.blog-title{
+    font-size:38px; /* 标题放大 */
+    color:#666;
+    font-weight:400;
+    margin-bottom:10px;
+}
+.blog-age{
+    font-size:17px; /* 介绍文字放大 */
+    color:#666;
+    margin-bottom:10px;
+}
+.nav-links{
+    font-size:16px; /* 导航放大 */
+}
+.nav-links a{
+    color:#06c;
+    text-decoration:none;
+    margin-right:18px;
+}
+.main{
+    max-width:1200px; /* 主体加宽 */
+    margin:20px auto;
+    display:flex;
+    gap:15px;
+    min-height:calc(100vh - 280px); /* 撑满页面，消除底部空白 */
+}
+.sidebar{
+    width:280px; /* 左侧栏加宽 */
+    background:#fff;
+    border:1px solid #ccc;
+    padding:15px;
+    font-size:16px;
+}
+.sidebar h3{
+    font-size:17px;
+    margin-bottom:12px;
+    padding-bottom:8px;
+    border-bottom:1px solid #eee;
+}
+.sidebar li{
+    list-style:none;
+    margin:10px 0;
+}
+.sidebar a{
+    color:#06c;
+    text-decoration:none;
+}
+.content{
+    flex:1;
+    background:#fff;
+    border:1px solid #ccc;
+    padding:30px; /* 内容内边距放大 */
+    font-size:16px; /* 正文放大 */
+    line-height:2.0; /* 行高更舒服 */
+}
+.category-title{
+    font-size:18px;
+    margin-bottom:20px;
+    padding-bottom:10px;
+    border-bottom:1px solid #eee;
+    font-weight:bold;
+}
+.paper-list{
+    line-height:2.1; /* 论文列表行高更大 */
+    font-size:16px;
+}
+.footer{
+    max-width:1200px;
+    margin:15px auto;
+    text-align:center;
+    color:#999;
+    font-size:14px;
+}
+</style>
+</head>
+<body>
+<div class="blog-header">
+  <div class="header-inner">
+    <div class="avatar">
+      <!-- 这里换成固定头像，永远不换 -->
+      <img src="https://picsum.photos/id/15/140/140">
+    </div>
+    <div class="blog-info">
+      <h1 class="blog-title">杜眷的博客 - 代表学术成果</h1>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="sidebar">
+    <h3>博文分类</h3>
+    <ul>
+      <li><a href="dujuan-blog.html">代表学术成果</a></li>
+      <li><a href="essays-list.html">随笔</a></li>
+      <li><a href="team.html">团队动态</a></li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <div class="category-title">【代表学术成果】</div>
+    <div class="paper-list">
+      《江阳东部沿海渔村民俗调查》（2007，《民俗研究》）<br>
+      《宗族祠堂与乡村秩序——以余苏地区为例》（2008，《民间文化论坛》）<br>
+      《“灶神”民间信仰中的谱系考辨》（2010，《世界宗教文化》）<br>
+      《从“赛社”到“庙会”：一个仪式功能的现代转型》（2011，《文化遗产》）<br>
+      《口述史方法在地方文献采集中的应用》（2012，《图书馆杂志》）<br>
+      《溪城本土“水神信仰”的模式研究》（2013，《民俗研究》第4期）<br>
+      《清湖流域碑刻地理考》（2020，《历史地理》）<br>
+      《高校图书馆特藏资源数字化建设规范研究》（2021，《中国图书馆学报》）<br>
+      《机器学习在地方志文献挖掘中的应用探索》（2022，《情报学报》）<br>
+      《民间活动中的法律习惯考察》（2023，《政法论坛》）<br>
+      《古籍修复中的材料科学问题初探》（2024，《文物保护与考古科学》）
+    </div>
+  </div>
+</div>
+
+<div class="footer">© 2025 杜眷的博客</div>
+</body>
+</html>

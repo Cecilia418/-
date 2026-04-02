@@ -1,0 +1,357 @@
+/* 全局样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "微软雅黑", Arial, sans-serif;
+}
+
+body {
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+/* 1. 顶部头部：logo + 联系入口 */
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 35px;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo h1 {
+  font-size: 40px;
+  color: #005ea5; /* 上大蓝 */
+  font-weight: normal; /* 书法体一般不需要加粗 */
+  font-family: 'Ma Shan Zheng', cursive; /* 核心：换成中文书法体 */
+}
+
+.header-right {
+    display: flex;
+    gap: 20px;
+}
+
+.header-right a {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.header-right a:hover {
+    color: #005ea5;
+}
+
+/* 2. 顶部横向导航栏核心样式 */
+.main-nav-container {
+    width: 100%;
+    background-color: #005ea5; /* 上大图书馆蓝色主调 */
+    margin: 0;
+    padding: 0;
+}
+
+.top-nav {
+    width: 100%;
+}
+
+/* 菜单列表：flex实现横向排列 */
+.menu-list {
+    list-style: none; /* 去掉默认小圆点 */
+    display: flex; /* 核心：横向排列 */
+    margin: 0;
+    padding: 0 20px;
+}
+
+.menu-item {
+    margin: 0;
+}
+
+/* 菜单项链接样式 */
+.menu-item a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 18px 35px; /* 核心：把上下12px改成18px，左右25px改成35px */
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px; /* 同时把字体稍微放大一点，更协调 */
+}
+/* 选中的菜单项高亮 */
+.menu-item.active a {
+    background-color: #004a8c;
+}
+
+/* 鼠标悬浮效果 */
+.menu-item a:hover {
+    background-color: #004a8c;
+}
+
+/* 图标样式微调 */
+.menu-item a i {
+    font-size: 14px;
+}
+/* 搜索框容器：导航栏下方，全屏宽度 */
+.search-container {
+    width: 100%;
+    background-color: #f5f5f5;
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+/* 搜索框主体：居中+适配宽度 */
+.search-box {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+/* 搜索输入框样式 */
+#bookSearchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+}
+
+/* 占位符文字样式（适配多浏览器） */
+#bookSearchInput::placeholder {
+    color: #999;
+    font-size: 14px;
+}
+#bookSearchInput::-webkit-input-placeholder {
+    color: #999;
+}
+#bookSearchInput:-moz-placeholder {
+    color: #999;
+}
+/* 针对整个搜索框容器 */
+.search-box {
+  display: flex;
+  align-items: stretch; /* 让子元素高度一致 */
+}
+
+/* 针对输入框，用类名或后代选择器 */
+.search-box input[type="text"] {
+  flex: 1; /* 占满剩余空间，铺满父容器 */
+  height: 60px;
+  padding: 0 20px;
+  font-size: 20px; /* 这里改大字体，效果会立刻生效 */
+  border: 1px solid #ddd;
+  border-right: none;
+  box-sizing: border-box;
+}
+
+/* 针对搜索按钮 */
+.search-box button {
+  width: 80px;
+  height: 60px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  font-size: 20px; /* 和输入框字体保持一致 */
+}
+
+/* 专门放大 placeholder 文字 */
+.search-box input::placeholder {
+  font-size: 20px;
+  color: #999;
+}
+/* 可选：鼠标悬停效果，提升体验 */
+#bookSearchBtn:hover {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* 按钮悬浮效果 */
+#bookSearchBtn:hover {
+    color: #005ea5;
+    background-color: #f9f9f9;
+}
+/* 3. 横幅Banner：横向铺满 */
+.banner {
+    width: 100%;
+    overflow: hidden;
+}
+
+.banner-img {
+    width: 100%; /* 横向铺满 */
+    height: auto; /* 高度自适应 */
+    max-height: 800px; /* 限制最大高度 */
+}
+/* 通知公告+友情链接容器：双列布局 */
+.info-links-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    display: flex;
+    gap: 30px; /* 两个板块之间的间距 */
+}
+
+/* 通用板块样式（通知公告/友情链接） */
+.info-section, .links-section {
+    flex: 1; /* 两个板块平分宽度 */
+}
+
+/* 板块标题+more按钮 */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #005ea5; /* 蓝色底边线，复刻示例 */
+}
+
+.section-header h3 {
+    font-size: 18px;
+    color: #333;
+    font-weight: 600;
+}
+
+/* more按钮样式 */
+.more-btn {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.more-btn:hover {
+    color: #005ea5;
+}
+
+/* 通知公告列表样式 */
+.info-list, .links-list {
+    list-style: none;
+}
+
+.info-item, .links-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee; /* 虚线分隔，复刻示例 */
+}
+
+/* 列表文字样式 */
+.info-text, .links-text {
+    font-size: 14px;
+    color: #333;
+    white-space: nowrap; /* 单行显示 */
+    overflow: hidden; /* 超出隐藏 */
+    text-overflow: ellipsis; /* 超出显示省略号 */
+    max-width: 80%; /* 限制文字宽度，避免挤压日期 */
+}
+
+.info-text:hover, .links-text:hover {
+    color: #005ea5;
+    cursor: pointer;
+}
+
+/* 日期样式（复刻示例的灰色背景） */
+.info-date, .links-date {
+    font-size: 12px;
+    color: #fff;
+    background-color: #999; /* 灰色背景，和示例一致 */
+    padding: 2px 8px;
+    border-radius: 2px;
+}
+
+
+/* 常用数据库容器 */
+.database-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 10px 0;
+}
+
+/* 数据库标题 */
+.database-header {
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #005ea5; /* 统一蓝色底边线 */
+}
+
+.database-header h3 {
+    font-size: 18px;
+    color: #333;
+    font-weight: 600;
+}
+
+/* 数据库列表：四列布局 */
+.database-list {
+    display: flex;
+    justify-content: space-between; /* 列间距均匀 */
+}
+
+/* 每一列样式 */
+.database-col {
+    flex: 1;
+    margin: 0 10px;
+}
+
+/* 数据库项样式（带箭头图标） */
+.database-item {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* 图标和文字间距 */
+    font-size: 14px;
+    color: #333;
+    text-decoration: none; /* 去掉链接下划线 */
+    padding: 6px 0;
+}
+
+/* 箭头图标样式（复刻示例的灰色箭头） */
+.database-item i {
+    font-size: 12px;
+    color: #666;
+}
+
+/* 可跳转项hover效果 */
+.database-item:hover {
+    color: #005ea5; /* hover变蓝色 */
+}
+/* 5. 底部样式 */
+.footer {
+    background-color: #005ea5;
+    color: #fff;
+    text-align: center;
+    padding: 15px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+/* 新增关键CSS */
+body {
+  background-color: #f0f2f5; /* 避免纯白背景 */
+}
+
+.banner {
+  position: relative;
+  min-height: 200px; /* 防止图片加载时高度塌陷 */
+  background-color: #e6e9ed; /* 加载时的背景色 */
+}
+
+.flash-mask {
+  animation: flash 0.1s ease-out forwards; /* 关键动画 */
+}
+
+@keyframes flash {
+  0% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}

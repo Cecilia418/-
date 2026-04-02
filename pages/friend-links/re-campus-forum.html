@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>溪城大学学生论坛</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+
+        /* 恐怖氛围：整体暗色背景 + 轻微卡顿动画（模拟服务器压力） */
+        body {
+            background-color: #1a1a1f; /* 暗黑色背景，比平时更暗 */
+            color: #e0e0e0;
+            /* 模拟页面卡顿：轻微的加载延迟动画 */
+            animation: lag 0.5s infinite alternate;
+        }
+        @keyframes lag {
+            0% { opacity: 1; }
+            50% { opacity: 0.98; }
+            100% { opacity: 0.95; }
+        }
+
+        /* 顶部导航栏：适配暗色主题 */
+        .header {
+            background-color: #0f2b47; /* 更深的蓝色 */
+            height: 80px;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            color: #e0e0e0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .header .logo {
+            display: flex;
+            align-items: center;
+        }
+        .header .logo h1 {
+            font-family: "Microsoft Yahei", sans-serif;
+            font-size: 25px;
+            font-weight: bold;
+            margin-left: 15px;
+            color: #ff4444; /* 标题偏红，强化诡异感 */
+        }
+        .header .nav {
+            margin-left: 50px;
+        }
+        .header .nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+        }
+        .header .nav a:hover {
+            color: #ff8888; /* hover变浅红 */
+        }
+        .header .user {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+        .header .user a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        /* 闪烁的置顶广告位 */
+        .top-ad {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #2a0a0a;
+            border: 2px solid #ff0000;
+            border-radius: 8px;
+            /* 核心：红色边框闪烁动画 */
+            animation: blink 0.8s infinite alternate;
+        }
+        @keyframes blink {
+            0% { border-color: #ff0000; box-shadow: 0 0 5px #ff0000; }
+            100% { border-color: #880000; box-shadow: 0 0 10px #880000; }
+        }
+        .top-ad .ad-title {
+            color: #ff4444;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .top-ad .ad-content {
+            color: #ffcccc;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        .top-ad .ad-link {
+            color: #ff8888;
+            text-decoration: underline;
+            cursor: pointer;
+            display: inline-block;
+            margin: 8px 0;
+        }
+        .top-ad .ad-small {
+            font-size: 10px;
+            color: #888888;
+            margin-top: 5px;
+        }
+
+        /* 主体容器 */
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 20px;
+        }
+
+        /* 左侧板块分类：暗色适配 */
+        .left-sidebar {
+            width: 200px;
+            background-color: #25252b;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .left-sidebar h3 {
+            color: #ff4444;
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #444;
+        }
+        .left-sidebar .category a {
+            display: block;
+            color: #cccccc;
+            text-decoration: none;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+        .left-sidebar .category a:hover {
+            color: #ff8888;
+            padding-left: 5px;
+            transition: 0.2s;
+        }
+
+        /* 中间帖子列表（核心区）：暗色适配 */
+        .main-content {
+            flex: 1;
+            background-color: #25252b;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .main-content .post-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .main-content .post-top h2 {
+            color: #ff4444;
+            font-size: 20px;
+        }
+        .main-content .post-top .publish-btn {
+            background-color: #0f2b47;
+            color: #e0e0e0;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .main-content .post-top .publish-btn:hover {
+            background-color: #081a2c;
+        }
+
+        /* 帖子卡片：恐怖氛围样式 */
+        .post-card {
+            background-color: #1f1f25;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            border-left: 3px solid #ff4444; /* 红色左侧边框强化恐怖感 */
+        }
+        /* 锁定帖子的特殊样式 */
+        .post-card.locked {
+            border-left: 3px solid #888888;
+            opacity: 0.8;
+        }
+        .post-card .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .post-card .post-header .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #444;
+            margin-right: 10px;
+        }
+        .post-card .post-header .user-info {
+            flex: 1;
+        }
+        .post-card .post-header .user-info .username {
+            font-weight: bold;
+            color: #ffcccc;
+        }
+        .post-card .post-header .user-info .time {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+        }
+        .post-card .post-header .category-tag {
+            background-color: #441111;
+            color: #ff8888;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        /* 置顶/热帖标签 */
+        .post-card .post-header .hot-tag {
+            background-color: #ff4444;
+            color: #fff;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-right: 5px;
+        }
+        .post-card .post-title {
+            font-size: 16px;
+            color: #ff8888;
+            margin-bottom: 8px;
+            text-decoration: none;
+            display: block;
+        }
+        .post-card .post-title:hover {
+            color: #ffaaaa;
+        }
+        .post-card .post-content {
+            color: #cccccc;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            /* 取消行数限制，完整显示恐怖内容 */
+            display: block;
+        }
+        /* 帖子回复区 */
+        .post-reply {
+            background-color: #2a2a30;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 8px 0;
+        }
+        .post-reply .reply-content {
+            color: #bbbbbb;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        /* 帖子状态提示 */
+        .post-status {
+            font-size: 12px;
+            color: #888888;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        .post-card .post-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #888;
+        }
+        .post-card .post-footer .action a {
+            color: #888;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        .post-card .post-footer .action a:hover {
+            color: #ff8888;
+        }
+
+        /* 右侧热门/公告区：暗色适配 */
+        .right-sidebar {
+            width: 250px;
+            display: none; /* 隐藏右侧栏，突出满屏帖子的效果 */
+        }
+
+        /* 底部：暗色适配 */
+        .footer {
+            background-color: #0f2b47;
+            color: #888;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="header">
+        <div class="logo">
+            <h1>溪城大学学生论坛</h1>
+        </div>
+        <div class="nav">
+            <a href="#"><i class="fa fa-home"></i> 首页</a>
+            <a href="#"><i class="fa fa-book"></i> 学习交流</a>
+            <a href="#"><i class="fa fa-life-ring"></i> 校园生活</a>
+            <a href="#"><i class="fa fa-briefcase"></i> 求职就业</a>
+            <a href="#"><i class="fa fa-gamepad"></i> 休闲娱乐</a>
+        </div>
+        <div class="user">
+            <a href="#"><i class="fa fa-user"></i> 登录</a>
+            <a href="#"><i class="fa fa-pen"></i> 注册</a>
+        </div>
+    </div>
+
+    <!-- 闪烁的置顶广告位 -->
+    <div class="top-ad">
+        <div class="ad-title">【置顶广告】🔥 顶峰保研 · 你的未来不是梦 🔥</div>
+        <div class="ad-content">本校合作机构，五年成功案例183例！<br>
+            排名靠后？我们帮你逆袭。背景不够？我们帮你包装。</div>
+        <a href="#" class="ad-link" onclick="window.open('顶峰保研机构官网')">点击进入官网，免费评估你的保研竞争力！</a>
+        <div class="ad-small">本校部分教师联合推荐</div>
+    </div>
+
+    <!-- 主体内容 -->
+    <div class="container">
+        <!-- 左侧板块分类 -->
+        <div class="left-sidebar">
+            <h3>板块分类</h3>
+            <div class="category">
+                <a href="#"><i class="fa fa-pencil"></i> 课程讨论</a>
+                <a href="#"><i class="fa fa-graduation-cap"></i> 考研考公</a>
+                <a href="#"><i class="fa fa-cutlery"></i> 食堂吐槽</a>
+                <a href="#"><i class="fa fa-dorm"></i> 宿舍生活</a>
+                <a href="#"><i class="fa fa-car"></i> 拼车出行</a>
+                <a href="#"><i class="fa fa-heart"></i> 脱单交友</a>
+                <a href="#"><i class="fa fa-exchange"></i> 闲置交易</a>
+                <a href="#"><i class="fa fa-question"></i> 求助问答</a>
+            </div>
+        </div>
+
+        <!-- 中间帖子列表 -->
+        <div class="main-content">
+            <div class="post-top">
+                <h2>最新帖子</h2>
+                <button class="publish-btn"><i class="fa fa-plus"></i> 发布新帖</button>
+            </div>
+
+            <!-- 帖子1：置顶热帖 按排名出事 -->
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">求生欲很强</div>
+                        <div class="time">2026-02-21 23:15</div>
+                    </div>
+                    <div class="hot-tag">置顶/热帖/已爆</div>
+                </div>
+                <a href="#" class="post-title">🔥🔥🔥《太邪门了！按排名出事，下一个到底是谁？》</a>
+                <div class="post-content">你们发现没有？溺亡的那个是计算机专业第一，植物人的那个是电子信息工程专业第一，被疯狗咬的是法学专业第一，主动退学的是计算机专业第二！一个一个按着排名来的！我室友是汉语言文学专业第一，他现在已经吓得不敢出宿舍了。下一个会轮到谁？！</div>
+                <div class="post-reply">
+                    <div class="reply-content">“别说了，我今晚都不敢去图书馆还书……”</div>
+                </div>
+                <div class="post-reply">
+                    <div class="reply-content">“据说当年跳楼的学长，就是计算机学院的，排名也是第一。”</div>
+                </div>
+                <div class="post-reply">
+                    <div class="reply-content">“我昨天晚上经过图书馆，五楼那个窗口……灯明明熄了，但我看到有个人影站在那里。”</div>
+                </div>
+                <div class="post-footer">
+                    <div class="action">
+                        <a href="#"><i class="fa fa-thumbs-up"></i> 点赞(568)</a>
+                        <a href="#"><i class="fa fa-comment"></i> 评论(327)</a>
+                        <a href="#"><i class="fa fa-star"></i> 收藏(189)</a>
+                    </div>
+                    <div class="view">浏览(9852)</div>
+                </div>
+            </div>
+
+            <!-- 帖子2：悬赏求图书馆老照片 -->
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">真相只有一个</div>
+                        <div class="time">2026-02-21 22:40</div>
+                    </div>
+                    <div class="category-tag">悬赏1000论坛币</div>
+                </div>
+                <a href="#" class="post-title">《谁有图书馆的老照片？特别是五楼靠窗的位置！》</a>
+                <div class="post-content">我查过学校档案，四年前跳楼的学长叫郑毅，就是在五楼靠窗那个位置跳下去的。从那以后，那个位置每到晚上就特别冷，有谁在那自习过的来说说？</div>
+                <div class="post-reply">
+                    <div class="reply-content">“我有一次不小心坐那了，明明是夏天，后背一直发凉，像有人在我耳边吹气。”</div>
+                </div>
+                <div class="post-reply">
+                    <div class="reply-content">“别问了，我朋友上周坐那，回来就发烧了，嘴里一直念叨‘不是我’。”</div>
+                </div>
+                <div class="post-reply">
+                    <div class="reply-content">“楼上别吓人……不过我听图书馆保安说，监控里看到过那个位置的书会自己翻页。”</div>
+                </div>
+                <div class="post-footer">
+                    <div class="action">
+                        <a href="#"><i class="fa fa-thumbs-up"></i> 点赞(412)</a>
+                        <a href="#"><i class="fa fa-comment"></i> 评论(256)</a>
+                        <a href="#"><i class="fa fa-star"></i> 收藏(158)</a>
+                    </div>
+                    <div class="view">浏览(7638)</div>
+                </div>
+            </div>
+
+            <!-- 帖子3：匿名爆料 放弃保研学姐 -->
+            <div class="post-card locked">
+                <div class="post-header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">上不了岸的小金鱼</div>
+                        <div class="time">2026-02-21 21:10</div>
+                    </div>
+                    <div class="category-tag">锁定</div>
+                </div>
+                <a href="#" class="post-title">《我就是那个主动放弃保研的学姐，我只能说……》</a>
+                <div class="post-content">我知道你们都在猜我看到了什么。那天晚上，我在五楼自习，图书馆已经没什么人了。我听到背后有翻书的声音，以为还有别人，就没在意。后来我去上厕所，回来的时候，我的书被翻到了某一页，上面用红笔写着：“下一个是你。”我抬头，窗外……窗外……算了，我不想说了。我放弃了，什么都不要了。你们也别问了，快走吧，真的，快走。</div>
+                <div class="post-footer">
+                    <div class="action">
+                        <a href="#"><i class="fa fa-thumbs-up"></i> 点赞(897)</a>
+                        <a href="#"><i class="fa fa-comment"></i> 评论(0)</a>
+                        <a href="#"><i class="fa fa-star"></i> 收藏(421)</a>
+                    </div>
+                    <div class="view">浏览(102568)</div>
+                </div>
+            </div>
+
+            <!-- ====================== -->
+            <!-- ✅ 插入：未知用户 乱码帖子（点击跳转 quiz-forum.html） -->
+            <!-- ====================== -->
+            <div class="post-card" style="border-left:3px solid #fff; opacity:0.85;">
+                <div class="post-header">
+                    <div class="avatar" style="background:#111;"></div>
+                    <div class="user-info">
+                        <div class="username" style="color:#fff; text-shadow:0 0 5px red;">未知</div>
+                        <div class="time">????-??-?? ??:??</div>
+                    </div>
+                    <div class="category-tag" style="background:#000; color:#fff;">系统异常</div>
+                </div>
+                <a href="quiz-forum.html" class="post-title" style="color:#fff;">%&#@^#*$@!&%#@*&^%$#@!</a>
+                <div class="post-content" style="color:#ccc; font-family:monospace; font-size:13px;">
+                    鑴氬悗璺熻剼鍚庤窡鑻︾摐榛勭摐浜屽幙涓捐寮€鏀炬棩鍦版柟鎬х殑闈炵嚎鎬у厜瀛﹀浗闃插ぇ瀛﹀彲鏍规嵁鍚堟牸鑰冦€�/浣犲氨鑳藉紑涓細鎱锋叏灏变箟浠栬涓簎涓庝綑娲掍笉鎺ョ數璇濇垜椤惰捣鍝鍝︾湅鐪嬩笘鐣岀鍑犳垜
+                </div>
+                <div class="post-status">此帖来源未知，无法查看发布者信息</div>
+                <div class="post-footer">
+                    <div class="action">
+                        <a href="#">点赞(???)</a>
+                        <a href="#">评论(???)</a>
+                    </div>
+                    <div class="view">浏览(???)</div>
+                </div>
+            </div>
+
+            <!-- 帖子4：讨论顶峰保研机构 -->
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">卷不动了</div>
+                        <div class="time">2026-02-21 20:35</div>
+                    </div>
+                    <div class="category-tag">讨论</div>
+                </div>
+                <a href="#" class="post-title">《有没有人听说过“顶峰保研机构”？就是广告那个，听说成功率挺高的》</a>
+                <div class="post-content">我认识的一个学长报了，本来排名靠后，结果前面的要么退学要么出事，他居然递补上了。是不是有点太巧了？这机构什么来头啊？</div>
+                <div class="post-reply">
+                    <div class="reply-content">“我也听说了，感觉有点邪门……”</div>
+                </div>
+                <div class="post-reply">
+                    <div class="reply-content">“别瞎说，人家机构有内部资源吧，别什么都往鬼上扯。”</div>
+                </div>
+                <div class="post-reply">
+                    <div class="reply-content">“我点进去他们官网看了，那个文案看得我喘不过气，全是‘你不努力就会被淘汰’‘排名就是一切’……太焦虑了。”</div>
+                </div>
+                <div class="post-footer">
+                    <div class="action">
+                        <a href="#"><i class="fa fa-thumbs-up"></i> 点赞(389)</a>
+                        <a href="#"><i class="fa fa-comment"></i> 评论(214)</a>
+                        <a href="#"><i class="fa fa-star"></i> 收藏(132)</a>
+                    </div>
+                    <div class="view">浏览(6547)</div>
+                </div>
+            </div>
+
+            <!-- 帖子5：求助深度学习问题 馆长相关 -->
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">书香墨客</div>
+                        <div class="time">2026-02-21 19:50</div>
+                    </div>
+                    <div class="category-tag">求助</div>
+                </div>
+                <a href="#" class="post-title">《有没有大佬能帮我解答一个问题？》</a>
+                <div class="post-content">前几天在教育论坛上，我正好遇到馆长在线答疑，就问了问他新论文里关于古籍识别的某个技术细节，因为我的毕业论文也是相关方向的。结果馆长支支吾吾没答上来，说这个问题太具体要回去查查。可我后来发现他论文里明明写了这个部分啊……是不是我问得太蠢了？</div>
+                <div class="post-reply">
+                    <div class="reply-content">“楼主你确定是本人吗？馆长可是大牛啊。”</div>
+                </div>
+                <div class="post-reply">
+                    <div class="reply-content">“会不会是论文合作者写的？很多老板都是挂名。”</div>
+                </div>
+                
+                <div class="post-footer">
+                    <div class="action">
+                        <a href="#"><i class="fa fa-thumbs-up"></i> 点赞(276)</a>
+                        <a href="#"><i class="fa fa-comment"></i> 评论(189)</a>
+                        <a href="#"><i class="fa fa-star"></i> 收藏(98)</a>
+                    </div>
+                    <div class="view">浏览(4321)</div>
+                </div>
+            </div>
+            </div>
+
+            
+        </div>
+
+        <!-- 右侧热门/公告（隐藏） -->
+        <div class="right-sidebar">
+            <div class="hot-post">
+                <h3>热门帖子</h3>
+                <div class="hot-list">
+                    <a href="#">2026届校招内推信息汇总（大厂+国企）</a>
+                    <a href="#">学校快递站营业时间调整通知</a>
+                    <a href="#">选修课避雷！这几门课千万别选</a>
+                    <a href="#">二手电动车转让（9成新，价格可谈）</a>
+                    <a href="#">校运会报名开始了！项目清单看这里</a>
+                </div>
+            </div>
+            <div class="notice">
+                <h3>校园公告</h3>
+                <p>1. 3月1日起，图书馆实行线上预约制度，未预约禁止入馆。</p>
+                <br>
+                <p>2. 学生宿舍水电费缴纳截止日期为2月28日，逾期将停水停电。</p>
+                <br>
+                <p>3. 新学期社团招新将于3月5日在体育馆举行，欢迎参加。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        <p>溪城大学学生论坛 © 2026 版权所有 | 技术支持：校信息化办公室</p>
+        <p>地址：溪城市溪大路100号 邮编：100000</p>
+    </div>
+</body>
+</html>

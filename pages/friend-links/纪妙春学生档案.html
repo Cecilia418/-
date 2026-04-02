@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纪妙春 · 学生档案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #5a5a5a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            font-family: 'Times New Roman', '宋体', '仿宋', serif;
+            padding: 40px 20px;
+        }
+
+        /* 纸张质感 */
+        .paper {
+            width: 100%;
+            max-width: 900px;
+            background-color: #ffffff;
+            box-shadow: 
+                0 4px 8px rgba(0, 0, 0, 0.1),
+                0 8px 16px rgba(0, 0, 0, 0.1),
+                0 16px 32px rgba(0, 0, 0, 0.15);
+            border-radius: 2px;
+            background-image: radial-gradient(rgba(0, 0, 0, 0.015) 1px, transparent 1px);
+            background-size: 40px 40px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .paper-content {
+            padding: 60px 70px;
+            line-height: 1.8;
+            color: #1e1e1e;
+            font-size: 16px;
+        }
+
+        .archive-title {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 4px;
+            margin-bottom: 8px;
+            color: #1e1e1e;
+            font-family: 'Times New Roman', '宋体', serif;
+        }
+
+        .archive-subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #4a4a4a;
+            margin-bottom: 40px;
+            font-weight: 400;
+            border-bottom: 1px solid #d4d4d4;
+            padding-bottom: 20px;
+        }
+
+        .profile-section {
+            display: flex;
+            gap: 60px;              /* 增加间隙，让信息表格更靠右 */
+            margin-bottom: 40px;
+            align-items: flex-start;
+        }
+
+        .photo-wrapper {
+            flex-shrink: 0;
+            width: 160px;
+        }
+
+        .photo-frame {
+            width: 160px;
+            height: 200px;
+            border: 1px solid #ccc;
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 照片下方姓名 - 确保在一行 */
+        .photo-caption {
+            text-align: center;
+            margin-top: 8px;
+            color: #1e1e1e;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;      /* 强制不换行 */
+            width: 100%;
+        }
+
+        .name-first {
+            display: inline-block;
+        }
+
+        .name-last {
+            display: inline-block;
+        }
+
+        /* 中间空白区域 - 白底白字，划过变红 */
+        .name-gap {
+            display: inline-block;
+            width: 140px;
+            height: 28px;
+            background-color: transparent;
+            position: relative;
+            cursor: pointer;
+            color: white;
+            transition: color 0.5s ease;
+            font-size: 16px;
+            font-weight: 400;
+            text-align: center;
+            line-height: 28px;
+            font-family: 'Times New Roman', monospace;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .name-gap:hover {
+            color: #ff0000;
+            background-color: rgba(255, 200, 200, 0.2);
+        }
+
+        /* 信息表格容器 - 增加左边距，整体向右移动 */
+        .info-wrapper {
+            flex: 1;
+            margin-left: 20px;        /* 向右移动 */
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .info-table td {
+            padding: 10px 8px;
+            border-bottom: 1px dashed #e0e0e0;
+            vertical-align: top;
+            font-size: 16px;
+        }
+
+        .info-table td:first-child {
+            width: 100px;
+            color: #4a4a4a;
+            font-weight: 500;
+        }
+
+        .info-table td:last-child {
+            color: #1e1e1e;
+        }
+
+        .section-divider {
+            border-top: 2px solid #e0e0e0;
+            margin: 40px 0 30px 0;
+        }
+
+        .honor-heading {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: #1e1e1e;
+            letter-spacing: 1px;
+            border-left: 4px solid #8b0000;
+            padding-left: 16px;
+        }
+
+        .honor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 30px;
+            margin-bottom: 30px;
+        }
+
+        .honor-item {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            font-size: 15.5px;
+            line-height: 1.6;
+        }
+
+        .honor-badge {
+            display: inline-block;
+            background-color: #f2f2f2;
+            color: #4a4a4a;
+            font-size: 12px;
+            padding: 2px 10px;
+            border-radius: 16px;
+            white-space: nowrap;
+            border: 1px solid #d0d0d0;
+            margin-left: 8px;
+        }
+
+        .page-number {
+            text-align: center;
+            margin-top: 50px;
+            color: #999;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .paper-shadow::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 5%;
+            width: 90%;
+            height: 20px;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.15) 0%, transparent 80%);
+            z-index: -1;
+            border-radius: 50%;
+            filter: blur(3px);
+            pointer-events: none;
+        }
+
+        .crease {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.02), transparent);
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        @media (max-width: 700px) {
+            .paper-content {
+                padding: 30px 25px;
+            }
+            .profile-section {
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
+            .info-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+            .honor-grid {
+                grid-template-columns: 1fr;
+            }
+            .name-gap {
+                width: 120px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="paper paper-shadow">
+        <div class="paper-content">
+            <div class="archive-title">学生个人档案</div>
+            <div class="archive-subtitle">计算机科学与技术专业 · 2022 级 1 班</div>
+
+            <div class="profile-section">
+                <div class="photo-wrapper">
+                    <div class="photo-frame">
+                        <img src="../../picture/jmc.jpg" alt="纪妙春">
+                    </div>
+                    <!-- 照片下方姓名：纪 [http://wangzhi.com] 妙春 - 强制同一行 -->
+                    <div class="photo-caption">
+                        <span class="name-first">纪</span>
+                        <span class="name-gap">http://wangzhi.com</span>
+                        <span class="name-last">妙春</span>
+                    </div>
+                </div>
+
+                <!-- 信息表格容器 - 添加右边距，整体向右移动 -->
+                <div class="info-wrapper">
+                    <table class="info-table">
+                        <tr>
+                            <td>性别</td>
+                            <td>女</td>
+                        </tr>
+                        <tr>
+                            <td>出生年月</td>
+                            <td>2004 年 3 月</td>
+                        </tr>
+                        <tr>
+                            <td>政治面貌</td>
+                            <td>中共预备党员</td>
+                        </tr>
+                        <tr>
+                            <td>籍贯</td>
+                            <td>江阳省余苏市</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="honor-heading">所获个人荣誉及成就</div>
+
+            <div class="honor-grid">
+                <div class="honor-item">
+                    <span>• 2023–2024 学年国家奖学金</span>
+                    <span class="honor-badge">国家级</span>
+                </div>
+                <div class="honor-item">
+                    <span>• 2022–2023 学年校级一等奖学金</span>
+                    <span class="honor-badge">校级</span>
+                </div>
+                <div class="honor-item">
+                    <span>• 校“三好学生”称号（累计 2 次获评）</span>
+                    <span class="honor-badge">校级</span>
+                </div>
+                <div class="honor-item">
+                    <span>• 全国大学生数学建模竞赛——省级二等奖</span>
+                    <span class="honor-badge">省级</span>
+                </div>
+                <div class="honor-item">
+                    <span>• 计算机设计大赛——校内一等奖</span>
+                    <span class="honor-badge">校级</span>
+                </div>
+                <div class="honor-item">
+                    <span>• 2024 年世界大学生夏季运动会——女子 4×100 米自由泳接力铜牌</span>
+                    <span class="honor-badge">国际级</span>
+                </div>
+                <div class="honor-item">
+                    <span>• 2024 年全国大学生游泳锦标赛——女子 200 米自由泳冠军</span>
+                    <span class="honor-badge">国家级</span>
+                </div>
+                <div class="honor-item">
+                    <span>• 国家二级游泳运动员资质</span>
+                    <span class="honor-badge">国家体育总局</span>
+                </div>
+            </div>
+
+            <div class="page-number">— 1 / 1 —</div>
+        </div>
+        <div class="crease"></div>
+    </div>
+</body>
+</html>

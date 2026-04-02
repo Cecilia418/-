@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>居柏 · 灵堂</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            font-family: "SimSun", "宋体", serif;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .fullscreen-image {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .fullscreen-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .black-section {
+            width: 100%;
+            background-color: #000000;
+            min-height: 100vh;
+            padding: 10vh 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 3.5vh;
+            position: relative;
+        }
+
+        /* 第一段文字：左上 */
+        .poem-top {
+            font-size: 26px;
+            line-height: 2.3;
+            text-shadow: 
+                0 0 10px rgba(255,255,255,0.9),
+                0 0 20px rgba(255,255,255,0.7),
+                0 0 30px rgba(255,255,255,0.5);
+            margin-left: 20vw;
+        }
+
+        /* 狗爪图片：严格屏幕正中间 */
+        .paw-image {
+            width: 280px;
+            height: auto;
+            opacity: 0.9;
+            margin-left: calc(50vw - 140px);
+            margin-top: -5px;
+            -webkit-mask-image: radial-gradient(circle, white 50%, transparent 100%);
+            mask-image: radial-gradient(circle, white 50%, transparent 100%);
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.6));
+        }
+
+        /* 最下方文字：大幅右移，完美阶梯 */
+        .poem-bottom {
+            font-size: 26px;
+            line-height: 2.3;
+            text-shadow: 
+                0 0 10px rgba(255,255,255,0.9),
+                0 0 20px rgba(255,255,255,0.7),
+                0 0 30px rgba(255,255,255,0.5);
+            margin-left: 60vw; /* 大幅右移，阶梯效果拉满 */
+        }
+    </style>
+</head>
+<body>
+    <div class="fullscreen-image">
+        img src="../../picture/居柏灵堂.jpg" alt="居柏灵堂">
+    </div>
+
+    <div class="black-section">
+        <div class="poem-top">
+毛毛爪，软软唇。<br>
+&nbsp;&nbsp;握握手，啃啃荤。<br>
+亲爱的小狗不怕不怕<br>
+&nbsp;&nbsp;溪边水边咧嘴呲牙。
+        </div>
+
+        <img src="../../picture/狗爪.jpg" class="paw-image" alt="狗爪">
+
+        <div class="poem-bottom">
+你看出来了<br>
+口水滴答答的伙伴。<br>
+不是侥幸，总不忍心<br>
+红红的眼睛，这里有四只。
+        </div>
+    </div>
+</body>
+</html>

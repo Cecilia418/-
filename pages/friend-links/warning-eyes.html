@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录安全提醒 - 溪城大学</title>
+  <style>
+    /* 全局样式重置 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* 页面主体：纯黑背景，全屏居中布局 */
+    body {
+      background-color: #000;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start; /* 靠上部布局 */
+      align-items: center;
+      padding-top: 10vh; /* 上部留白，控制整体位置 */
+      font-family: "微软雅黑", Arial, sans-serif;
+    }
+
+    /* 图片容器：限制最大宽度，自适应缩放 */
+    .warning-img-container {
+      margin-bottom: 40px; /* 图片和文字间距 */
+      max-width: 80%; /* 适配移动端 */
+      text-align: center;
+    }
+
+    .warning-img-container img {
+      max-width: 100%;
+      height: auto;
+      max-height: 400px; /* 限制图片最大高度 */
+      border-radius: 8px; /* 轻微圆角，提升质感 */
+    }/* 调整后的“轮到你了”大字样式 - 居中+右移 */
+.target-text {
+  font-family: 'JingPinDianZhenTi', monospace;
+  color: #ff0000;
+  font-size: 100px;
+  font-weight: normal;
+  margin-bottom: 20px;
+  letter-spacing: 10px;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+  /* 核心修改：先居中，再向右偏移 */
+  text-align: center;          /* 整体居中 */
+  transform: translateX(30px); /* 向右偏移20px，可自行调整数值 */
+  /* 可选：如果想更精准居中，加宽度100% */
+  width: 100%;
+}
+@font-face {
+  font-family: 'JingPinDianZhenTi';
+  src: url('../../fonts/精品点阵体 简 9×9 Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .target-text {
+    font-size: 50px;
+    letter-spacing: 5px;
+    transform: translateX(10px); /* 移动端少偏移点 */
+  }
+}
+  </style>
+</head>
+<body>
+  <!-- 警示图片 -->
+  <div class="warning-img-container">
+    <!-- 把原来的 img 标签替换成这个 -->
+<img src="../../picture/warning-eyes.jpeg" alt="安全警示">
+  </div>
+
+ <!-- 新增：“轮到你了”大字 -->
+  <div class="target-text">轮  到  你  了</div>
+
+  <script>
+    // 返回登录页按钮点击事件
+    document.getElementById('backLoginBtn').addEventListener('click', function() {
+      // 跳转回登录页（根据你的实际登录页路径调整）
+      window.location.href = 'login.html';
+      // 可选：清除错误次数记录（如果需要返回后重置计数）
+      localStorage.removeItem('loginErrorCount');
+    });
+  </script>
+</body>
+</html>

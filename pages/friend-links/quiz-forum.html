@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六格密码 · 暗红验证</title>
+    <style>
+        /* 极简重置：没有任何阴影、渐变、多余的视觉效果 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #8B0000; /* 纯暗红背景，无任何装饰 */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', Courier, monospace; /* 等宽字体与格子搭配 */
+        }
+
+        /* 图案容器 - 只保留黑框+内部白色 (mix-blend-mode 去掉所有光影) */
+        .pattern-container {
+            width: 80%;
+            max-width: 1000px;
+            margin-bottom: 3rem;
+            /* 无阴影、无边框、无任何效果 */
+        }
+
+        .pattern-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            /* 仅保留混合模式，让暗红背景透入白色区域，保留黑线 */
+            mix-blend-mode: multiply;
+        }
+
+        /* 六位独立格子容器 */
+        .six-grid {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;         /* 极度窄屏时换行，但保持格子可见 */
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* 每一个数字格子 — 无阴影、无圆角、无模糊，纯硬边 */
+        .digit-cell {
+            width: 70px;
+            height: 80px;
+            background-color: transparent;   /* 完全透明底，只留白边和文字 */
+            border: 3px solid #ffffff;       /* 纯白边框，无任何模糊 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #ffffff;                  /* 数字纯白 */
+            text-align: center;
+            line-height: 1;
+            caret-color: transparent;         /* 隐藏光标，因为不直接输入在格子里 */
+            transition: none;                 /* 不要任何动画 */
+        }
+
+        /* 隐藏原生输入框，我们用隐形的输入器统一控制 */
+        .hidden-input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+        }
+
+        /* 实际用于接收输入的蒙层输入框：完全透明且覆盖在格子上方，方便唤起键盘 */
+        .overlay-input {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 80px;           /* 与格子高度匹配 */
+            margin-top: -80px;       /* 向上覆盖格子区域 */
+            opacity: 0;              /* 完全透明但可点击/聚焦 */
+            z-index: 10;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            background: transparent;
+            /* 保证在移动端能触发数字键盘 */
+        }
+
+        /* 辅助点击区域说明——没有任何提示文字，只保留一个不可见层 */
+        .click-catcher {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* 移除所有可能的阴影、轮廓 */
+        input:focus, div:focus {
+            outline: none;
+        }
+
+        /* 可选：让格子有“已填充”的细微视觉，但纯白字无阴影 */
+        .digit-cell.filled {
+            color: #ffffff;   /* 纯白不变，保证可见 */
+        }
+
+        /* 没有任何多余的提示区块，完全干净 */
+    </style>
+</head>
+<body>
+    <div class="pattern-container">
+        <!-- 图案路径保持不变 — 确保黑框+内部白色透出暗红 -->
+        <img src="../../picture/square.jpg" alt=" ">
+    </div>
+
+    <!-- 六格纯白边框区域，没有任何文字提示 -->
+    <div class="six-grid" id="sixGrid">
+        <div class="digit-cell" id="cell0"></div>
+        <div class="digit-cell" id="cell1"></div>
+        <div class="digit-cell" id="cell2"></div>
+        <div class="digit-cell" id="cell3"></div>
+        <div class="digit-cell" id="cell4"></div>
+        <div class="digit-cell" id="cell5"></div>
+    </div>
+
+    <!-- 不可见的透明输入层，点击格子区域即可弹出键盘 -->
+    <input type="text" 
+           class="overlay-input" 
+           id="numericInput"
+           inputmode="numeric" 
+           pattern="\d*"
+           maxlength="6"
+           value=""
+           autocomplete="off"
+           aria-label=" "          <!-- 完全无提示 -->
+    >
+
+    <script>
+        (function() {
+            // ---------- 硬编码密码 ----------
+            const CORRECT_PASSWORD = "787978";
+            const TARGET_URL = "quiz2-forum.html";
+
+            // 获取六个格子元素
+            const cells = [
+                document.getElementById('cell0'),
+                document.getElementById('cell1'),
+                document.getElementById('cell2'),
+                document.getElementById('cell3'),
+                document.getElementById('cell4'),
+                document.getElementById('cell5')
+            ];
+
+            // 透明输入框
+            const inputField = document.getElementById('numericInput');
+
+            // 确保输入框只能填数字（过滤非数字）
+            inputField.addEventListener('input', function(e) {
+                let raw = e.target.value;
+                // 只保留数字
+                let digits = raw.replace(/\D/g, '');
+                // 限制最多6位
+                if (digits.length > 6) {
+                    digits = digits.slice(0, 6);
+                }
+                e.target.value = digits;
+
+                // 更新格子显示
+                updateCells(digits);
+
+                // 当位数达到6时自动验证
+                if (digits.length === 6) {
+                    verifyPassword(digits);
+                }
+            });
+
+            // 更新格子：依次填入数字，不足6位则留空
+            function updateCells(digitsStr) {
+                const len = digitsStr.length;
+                for (let i = 0; i < 6; i++) {
+                    if (i < len) {
+                        cells[i].textContent = digitsStr[i];
+                        // 简单标记filled类（没有样式效果，仅为可能备用）
+                        cells[i].classList.add('filled');
+                    } else {
+                        cells[i].textContent = '';
+                        cells[i].classList.remove('filled');
+                    }
+                }
+            }
+
+            // 密码验证函数
+            function verifyPassword(inputVal) {
+                if (inputVal === CORRECT_PASSWORD) {
+                    // 正确跳转
+                    window.location.href = TARGET_URL;
+                      // 同时写入 sessionStorage 和 localStorage，确保首页能读到
+          sessionStorage.setItem('libraryImgChanged', 'true');
+          localStorage.setItem('libraryImgChanged', 'true');
+                } else {
+                    // 弹出错误弹窗
+                    alert('好孩子，再想想');
+                    // 清空输入和格子 (符合直觉：输错清空重来)
+                    inputField.value = '';
+                    updateCells('');
+                    // 让输入框重新获得焦点，方便再次输入
+                    inputField.focus();
+                }
+            }
+
+            // 让点击任何一个格子区域，都能把焦点给到透明输入框 (包括点击格子或间隙)
+            const catcher = document.querySelector('.six-grid');
+            catcher.addEventListener('click', function(e) {
+                inputField.focus();
+            });
+
+            // 同样，点击透明输入框本身（虽然不可见）也保持焦点，不额外做任何事
+            inputField.addEventListener('click', function(e) {
+                // 保持焦点
+            });
+
+            // 初始清空格子
+            updateCells('');
+
+            // 附加：避免页面其他区域点击失去焦点导致键盘收起的处理——不过不干扰，保持简洁。
+            // 用户如果点击背景或图片，会收起键盘，但再次点击格子即可。完全无提示。
+
+            // 处理物理键盘/回车：移动端通常无回车问题。如果PC端用户按了回车且正好6位，验证
+            inputField.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    const current = inputField.value.replace(/\D/g, '');
+                    if (current.length === 6) {
+                        verifyPassword(current);
+                    } else {
+                        // 不足6位按回车也不弹错，忽略
+                    }
+                }
+            });
+
+            // 禁止软键盘上的“完成”或“前往”导致奇怪行为，无额外操作
+        })();
+    </script>
+
+    <!-- 确保没有任何文字提示，图片alt留空，所有可见区域无占位符 -->
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>溪城大学学生论坛 - 教务系统吐槽</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+
+        /* 蓝白色清爽风格 */
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* 顶部导航栏 */
+        .header {
+            background-color: #005ea5;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .header .logo {
+            display: flex;
+            align-items: center;
+        }
+        .header .logo h1 {
+            font-size: 25px;
+            font-weight: bold;
+            margin-left: 15px;
+            color: #ffffff;
+        }
+        .header .nav {
+            margin-left: 50px;
+        }
+        .header .nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+        .header .nav a:hover {
+            color: #cce7ff;
+        }
+        .header .user {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+        .header .user a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-left: 20px;
+            transition: 0.2s;
+        }
+        .header .user a:hover {
+            color: #cce7ff;
+        }
+
+        /* 公告栏 */
+        .top-ad {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #e6f4ff;
+            border: 1px solid #005ea5;
+            border-radius: 8px;
+        }
+        .top-ad .ad-title {
+            color: #005ea5;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* 主体容器 */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* 中间帖子详情 */
+        .main-content {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .main-content .post-title {
+            font-size: 24px;
+            color: #005ea5;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .main-content .post-meta {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #eee;
+        }
+
+        /* 楼主 & 回复样式 */
+        .reply-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .reply-item.header {
+            background: none;
+            box-shadow: none;
+            height: auto;
+            padding: 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        .reply-item .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #e6f4ff;
+            margin-right: 12px;
+        }
+        .reply-item .user-info {
+            flex: 1;
+        }
+        .reply-item .username {
+            font-weight: bold;
+            color: #333;
+            font-size: 15px;
+        }
+        .reply-item .floor {
+            color: #005ea5;
+            font-size: 13px;
+            margin-left: 8px;
+        }
+        .reply-item .time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 3px;
+        }
+        .reply-item .content {
+            margin-top: 10px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .reply-item .quote {
+            background: #f7f9fc;
+            padding: 8px 12px;
+            border-left: 3px solid #ccc;
+            margin: 8px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .ad-content {
+            color: #ff4500 !important;
+            font-weight: bold;
+        }
+
+        /* 底部 */
+        .footer {
+            background-color: #005ea5;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="header">
+        <div class="logo">
+            <h1>溪城大学学生论坛</h1>
+        </div>
+        <div class="nav">
+            <a href="campus-forum.html"><i class="fa fa-home"></i> 首页</a>
+        </div>
+        <div class="user">
+            <a href="#"><i class="fa fa-user"></i> 登录</a>
+            <a href="#"><i class="fa fa-pen"></i> 注册</a>
+        </div>
+    </div>
+
+    <!-- 路径导航 -->
+    <div class="top-ad">
+        <div class="ad-title">校园论坛 > 课程讨论 > 【求助/讨论】这教务系统是上个世纪开发的吧？</div>
+    </div>
+
+    <!-- 主体内容（只保留帖子，无任何侧边栏） -->
+    <div class="container">
+        <div class="main-content">
+            <div class="post-title">【求助/讨论】这教务系统是上个世纪开发的吧？</div>
+            <div class="post-meta">发帖时间：2025-12-20 19:34</div>
+
+            <!-- 楼主 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">选课到自闭 <span class="floor">楼主</span></div>
+                        <div class="time">2025-12-20 19:34 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    每次选课都要卡半天，界面丑就算了，验证码还老看不清，点提交永远在转圈。这破系统到底什么时候能升级啊？有同样遭遇的兄弟姐妹吗？
+                </div>
+            </div>
+
+            <!-- 2楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">别问我是谁 <span class="floor">2楼</span></div>
+                        <div class="time">2025-12-20 19:42 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    +1，我们学校也是这个鬼样子，听说全国高校都用同一套模板，外包公司做的吧。
+                </div>
+            </div>
+
+            <!-- 3楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">吃瓜群众 <span class="floor">3楼</span></div>
+                        <div class="time">2025-12-20 19:55 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="quote">引用2楼 别问我是谁 发表于 2025-12-20 19:42<br>+1，我们学校也是这个鬼样子，听说全国高校都用同一套模板，外包公司做的吧。</div>
+                    确实，我朋友在隔壁理工大学，他们的教务系统长得一模一样，连登录界面都不带换的。最离谱的是，他们学校管理员账号居然还用的默认admin，密码都没改，哈哈。
+                </div>
+            </div>
+
+            <!-- 4楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">路过打酱油 <span class="floor">4楼</span></div>
+                        <div class="time">2025-12-20 20:28 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    别说了，我今天为了抢一门公选课，从下午两点刷到五点，最后告诉我系统崩溃，气得我直接去操场跑了十圈。
+                </div>
+            </div>
+
+            <!-- 5楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">今天也在摸鱼 <span class="floor">5楼</span></div>
+                        <div class="time">2025-12-20 20:44 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    十圈算啥，有本事来跑校园跑啊！一学期120公里，我才跑了30公里，剩下两个月怎么肝啊？话说有没有那种科技手段，摇步器或者什么软件能作弊的？求推荐！
+                </div>
+            </div>
+
+            <!-- 6楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">不信谣不传谣 <span class="floor">6楼</span></div>
+                        <div class="time">2025-12-20 21:02 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    别歪楼啊，还是说回教务系统吧。我其实一直好奇，那个管理员账号到底谁能登？要是能登进去帮大家调调课就好了哈哈哈。
+                </div>
+            </div>
+
+            <!-- 7楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">Justice <span class="floor">7楼</span></div>
+                        <div class="time">2025-12-20 21:17 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    542694267474
+                </div>
+            </div>
+
+            <!-- 8楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">萌新求带 <span class="floor">8楼</span></div>
+                        <div class="time">2025-12-20 21:30 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    楼上这串数字是什么鬼？暗号吗？
+                </div>
+            </div>
+
+            <!-- 9楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">解密爱好者 <span class="floor">9楼</span></div>
+                        <div class="time">2025-12-20 21:45 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="quote">引用7楼 Justice 发表于 2025-12-20 21:17<br>542694267474</div>
+                    试了一下，用手机九键输入法按这些数字，出来的是……原来如此。
+                </div>
+            </div>
+
+            <!-- 10楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">不想早起 <span class="floor">10楼</span></div>
+                        <div class="time">2025-12-20 21:52 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    谜语人滚出论坛！知道什么就说啊，别吊胃口行不行。
+                </div>
+            </div>
+
+            <!-- 11楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">论文急救 <span class="floor">11楼</span></div>
+                        <div class="time">2025-12-20 22:01 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content ad-content">
+                    🔥 期末论文没头绪？学姐代写团队，保证原创，通过率100%！加QQ：123456789 备注“溪城大学”享优惠 🔥
+                </div>
+            </div>
+
+            <!-- 12楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">吃瓜群众 <span class="floor">12楼</span></div>
+                        <div class="time">2025-12-20 22:08 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="quote">引用11楼 论文急救 发表于 2025-12-20 22:01<br>🔥 期末论文没头绪…… 🔥</div>
+                    广告叉出去！版主呢？来删帖啊。
+                </div>
+            </div>
+
+            <!-- 13楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">今天也在摸鱼 <span class="floor">13楼</span></div>
+                        <div class="time">2025-12-20 22:15 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    笑死，广告都打到吐槽帖里了。不过说真的，我也得去找代跑了，校园跑实在跑不完。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        <p>溪城大学学生论坛 © 2026 版权所有 | 技术支持：校信息化办公室</p>
+    </div>
+</body>
+</html>

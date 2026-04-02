@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>溪城大学教务系统</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+        }
+
+        /* 顶部标题栏 */
+        .page-header {
+            background-color: #005ea5; /* 上大蓝 */
+            color: #fff;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 25px;
+            font-weight: 600;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: normal;
+        }
+
+        .admin-icon {
+            width: 24px;
+            height: 24px;
+            background-color: #fff;
+            color: #005ea5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* 主要内容区 */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        /* 通用卡片样式 */
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 20px;
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #005ea5;
+        }
+
+        /* 常用软件区 - 核心修复：把function-btn和software-item合并样式 */
+        .software-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 保持3列布局 */
+            gap: 25px; /* 把间隔从15px调大到25px，让小框之间更宽松 */
+            width: 100%; /* 确保网格占满父容器 */
+        }
+
+        /* 关键修复：.software-item 和 .function-btn 共用一套样式 */
+        .software-item, .function-btn {
+            background-color: #f0f5fa;
+            border-radius: 6px;
+            padding: 35px 10px; /* 把上下内边距从20px调大到35px，让小框更高 */
+            text-align: center;
+            color: #333;
+            text-decoration: none; /* 去掉下划线 */
+            transition: all 0.2s;
+            font-size: 18px; /* 可选：把文字也稍微放大，更协调 */
+            display: block; /* 确保占满整个网格单元格 */
+        }
+
+        /* 悬停效果也给两个类都加上 */
+        .software-item:hover, .function-btn:hover {
+            background-color: #e0ebf7;
+            transform: translateY(-2px);
+        }
+
+        /* 学生档案查询区 */
+        .search-box {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .search-box button {
+            padding: 10px 15px;
+            background-color: #005ea5;
+            color: #fff;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        /* 独立的附件卡片样式 */
+        .attachment-card {
+            margin-top: 20px; /* 和查询框拉开间距 */
+            background-color: #f0f5fa; /* 浅蓝底色区分 */
+            border: 1px solid #e0ebf7;
+        }
+
+        .attachment-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .attachment-list li {
+            padding: 8px 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .attachment-list li::before {
+            content: "📎"; /* 附件图标 */
+            font-size: 14px;
+        }
+
+        /* 待办事项区 */
+        .todo-section {
+            grid-column: 1 / -1; /* 横跨两列 */
+        }
+
+        .todo-list {
+            list-style: none;
+        }
+
+        .todo-list li {
+            padding: 12px 0;
+            border-bottom: 1px dashed #eee;
+            color: #333;
+        }
+
+        .todo-list li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部标题栏 -->
+    <header class="page-header">
+        溪城大学教务系统
+        <div class="admin-info">
+            <span class="admin-icon">👤</span>
+            <span>管理员账号</span>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <div class="container">
+        <!-- 左侧：常用软件 -->
+        <div class="card">
+            <h3>常用软件</h3>
+            <div class="software-grid">
+                <a href="#" class="software-item">学分认定</a>
+                <a href="#" class="software-item">课程安排</a>
+                <a href="#" class="software-item">评优评先</a>
+                <a href="#" class="software-item">会议预约</a>
+                <a href="notice-public.html" class="function-btn">公告公示</a>
+                <!-- 替换原有学籍查询的a标签 -->
+                <a href="student-status.html" class="software-item">学籍查询</a>
+            </div>
+        </div>
+
+        <!-- 右侧：学生档案查询 + 附件 -->
+        <div>
+            <!-- 学生档案查询卡片 -->
+            <div class="card">
+                <h3>学生档案查询</h3>
+                <div class="search-box">
+                    <input type="text" placeholder="请输入学号/姓名查询">
+                    <button>查询</button>
+                </div>
+            </div>
+
+            <!-- 独立的附件卡片 -->
+            <div class="card attachment-card">
+                <h3>附件</h3>
+                <ul class="attachment-list">
+                    <!-- 替换原有保研排名的li标签 -->
+                    <!-- 给 a 标签加上 download 属性 -->
+                    <li><a href="/files/保研排名(2026届).pdf" target="_blank">保研排名(2026届).pdf</a></li>
+                    <li>评优评先工作实施细则.docx</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 底部：待办事项 -->
+        <div class="card todo-section">
+            <h3>待办事项</h3>
+            <ul class="todo-list">
+                <li>• 发布保研名单公示</li>
+                <li>• 处理学籍异动工作留档</li>
+                <li>• 有序推进每学期评教工作</li>
+                <li>• 五四歌会节目单征集</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

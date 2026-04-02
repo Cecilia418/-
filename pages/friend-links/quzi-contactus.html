@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>CRT 信号故障 · 老式电视Glitch</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* 主故障容器 —— 横向拉伸矩形，模拟CRT屏幕 */
+        .glitch-crt {
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            aspect-ratio: 16 / 9;        /* 宽屏比例，更像电视 */
+            background: #0a0a0a;
+            overflow: hidden;              /* 让撕裂边缘仍保持在框内，但视觉上超出部分看不见，用伪元素制造溢出感 */
+            border: 4px solid #222;
+            box-shadow: 
+                0 0 0 2px #666,
+                0 0 0 5px #111,
+                inset 0 0 30px rgba(255,0,255,0.3),
+                0 0 40px rgba(0,255,255,0.4);
+            z-index: 1;
+        }
+
+        /* 所有故障图层容器 */
+        .fault-layers {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            mix-blend-mode: normal;
+        }
+
+        /* ========== 通用水平撕裂动画 ========== */
+        @keyframes horizontalTear {
+            0% { transform: translateX(0) skewX(0deg); }
+            10% { transform: translateX(-8px) skewX(2deg); }
+            20% { transform: translateX(12px) skewX(-3deg); }
+            30% { transform: translateX(-5px) skewX(1deg); }
+            40% { transform: translateX(15px) skewX(-4deg); }
+            50% { transform: translateX(-12px) skewX(3deg); }
+            60% { transform: translateX(6px) skewX(-1deg); }
+            70% { transform: translateX(-14px) skewX(5deg); }
+            80% { transform: translateX(9px) skewX(-2deg); }
+            90% { transform: translateX(-7px) skewX(3deg); }
+            100% { transform: translateX(0) skewX(0deg); }
+        }
+
+        @keyframes rgbShift {
+            0% { text-shadow: 2px 0 red, -2px 0 blue, 0 0 green; filter: hue-rotate(0deg); }
+            25% { text-shadow: -3px 0 blue, 3px 0 red, 0 0 green; filter: hue-rotate(15deg); }
+            50% { text-shadow: 4px 0 green, -4px 0 red, 0 0 blue; filter: hue-rotate(30deg); }
+            75% { text-shadow: -2px 0 blue, 5px 0 red, 0 0 green; filter: hue-rotate(45deg); }
+            100% { text-shadow: 2px 0 red, -2px 0 blue, 0 0 green; filter: hue-rotate(0deg); }
+        }
+
+        @keyframes noiseFlicker {
+            0% { opacity: 0.9; background-position: 0 0; }
+            20% { opacity: 1; background-position: 5px 3px; }
+            40% { opacity: 0.8; background-position: -8px -5px; }
+            60% { opacity: 1; background-position: 12px -3px; }
+            80% { opacity: 0.7; background-position: -5px 8px; }
+            100% { opacity: 0.9; background-position: 0 0; }
+        }
+
+        /* ========== 所有水平条带图层 ========== */
+
+        /* 图层1: 顶部棋盘格噪波带 (极窄) */
+        .layer-top-noise {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6%;
+            background-image: 
+                repeating-linear-gradient(45deg, #fff 0px, #fff 4px, #000 4px, #000 8px),
+                repeating-linear-gradient(0deg, rgba(255,0,255,0.3) 0px, rgba(0,255,255,0.3) 2px, transparent 2px, transparent 6px);
+            background-blend-mode: overlay;
+            mix-blend-mode: screen;
+            animation: horizontalTear 0.3s infinite steps(1), noiseFlicker 0.2s infinite steps(2);
+            z-index: 5;
+            opacity: 0.95;
+            box-shadow: inset 0 -2px 10px #f0f;
+        }
+
+        /* 图层2: 亮彩色水平撕裂带 */
+        .layer-bright-strip {
+            position: absolute;
+            top: 5%;
+            left: 0;
+            width: 100%;
+            height: 8%;
+            background: linear-gradient(90deg, 
+                #00ff00 0%, #00ff00 15%, 
+                #0000ff 15%, #0000ff 30%,
+                #ff00ff 30%, #ff00ff 45%,
+                #ff69b4 45%, #ff69b4 60%,
+                #ff0000 60%, #ff0000 75%,
+                #ffff00 75%, #ffff00 90%,
+                #00ffff 90%, #00ffff 100%);
+            background-size: 200% 100%;
+            mix-blend-mode: hard-light;
+            animation: horizontalTear 0.25s infinite steps(2);
+            z-index: 6;
+            opacity: 0.9;
+            filter: blur(1px) brightness(1.3);
+            transform: skewX(-2deg);
+        }
+
+        /* 图层3: 彩色条带区1 (深蓝/亮蓝/亮绿/亮粉) 带棋盘格嵌入 */
+        .layer-color-bands-1 {
+            position: absolute;
+            top: 13%;
+            left: 0;
+            width: 100%;
+            height: 12%;
+            background: 
+                repeating-linear-gradient(90deg, 
+                    #00008b 0px, #00008b 40px,
+                    #1e90ff 40px, #1e90ff 80px,
+                    #32cd32 80px, #32cd32 120px,
+                    #ff69b4 120px, #ff69b4 160px,
+                    #ff4500 160px, #ff4500 200px,
+                    #9400d3 200px, #9400d3 240px);
+            background-size: 240px 100%;
+            mix-blend-mode: overlay;
+            animation: horizontalTear 0.4s infinite steps(3);
+            z-index: 7;
+            opacity: 0.9;
+            filter: blur(0.5px) contrast(1.5);
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.5);
+            transform: translateX(-5px) skewX(1deg);
+        }
+
+        /* 在layer-color-bands-1中嵌入棋盘格（伪元素） */
+        .layer-color-bands-1::after {
+            content: "";
+            position: absolute;
+            top: 20%;
+            left: 30%;
+            width: 40%;
+            height: 60%;
+            background: repeating-linear-gradient(45deg, #000 0px, #000 6px, #fff 6px, #fff 12px);
+            mix-blend-mode: difference;
+            opacity: 0.5;
+            animation: horizontalTear 0.3s infinite alternate;
+            filter: blur(1px);
+            pointer-events: none;
+        }
+
+        /* 图层4: 标准彩条区 (被扭曲错位) */
+        .layer-color-bars {
+            position: absolute;
+            top: 25%;
+            left: 0;
+            width: 100%;
+            height: 14%;
+            background: linear-gradient(90deg, 
+                #000 0%, #000 10%,
+                #fff 10%, #fff 20%,
+                #00ffff 20%, #00ffff 30%,
+                #ff00ff 30%, #ff00ff 40%,
+                #00ff00 40%, #00ff00 50%,
+                #ff0000 50%, #ff0000 60%,
+                #0000ff 60%, #0000ff 70%,
+                #ffff00 70%, #ffff00 80%,
+                #000 80%, #000 90%,
+                #fff 90%, #fff 100%
+            );
+            background-size: 200% 100%;
+            mix-blend-mode: hard-light;
+            animation: horizontalTear 0.35s infinite steps(2);
+            z-index: 8;
+            filter: blur(1px) brightness(1.2);
+            transform: scaleX(1.02) skewX(-3deg);
+            opacity: 0.9;
+            box-shadow: inset 0 0 30px rgba(0,255,255,0.5);
+        }
+
+        /* 图层5: 噪波与撕裂区 (棋盘格+彩色噪点) */
+        .layer-noise-tear {
+            position: absolute;
+            top: 39%;
+            left: 0;
+            width: 100%;
+            height: 10%;
+            background: 
+                repeating-linear-gradient(45deg, 
+                    #fff 0px, #fff 3px, 
+                    #000 3px, #000 6px,
+                    #ff00ff 6px, #ff00ff 9px,
+                    #00ffff 9px, #00ffff 12px,
+                    #ffff00 12px, #ffff00 15px),
+                repeating-linear-gradient(0deg, rgba(255,0,0,0.3) 0px, rgba(0,255,0,0.3) 2px, rgba(0,0,255,0.3) 4px);
+            background-blend-mode: screen;
+            mix-blend-mode: overlay;
+            animation: horizontalTear 0.2s infinite steps(3), noiseFlicker 0.15s infinite;
+            z-index: 9;
+            filter: blur(0.8px) contrast(2);
+            opacity: 0.95;
+            transform: translateX(3px) skewX(2deg);
+        }
+
+        /* 图层6: 剧烈撕裂区 (大块黑白彩色块) */
+        .layer-heavy-tear {
+            position: absolute;
+            top: 49%;
+            left: 0;
+            width: 100%;
+            height: 16%;
+            background: repeating-linear-gradient(90deg, 
+                #fff 0px, #fff 20px,
+                #000 20px, #000 40px,
+                #ff00ff 40px, #ff00ff 60px,
+                #00ffff 60px, #00ffff 80px,
+                #ff0000 80px, #ff0000 100px,
+                #ffff00 100px, #ffff00 120px,
+                #0000ff 120px, #0000ff 140px,
+                #fff 140px, #fff 160px
+            );
+            background-size: 160px 100%;
+            mix-blend-mode: difference;
+            animation: horizontalTear 0.45s infinite steps(1);
+            z-index: 10;
+            filter: blur(1.5px) brightness(1.5);
+            transform: translateX(-8px) skewX(-4deg);
+            opacity: 0.85;
+            box-shadow: inset 0 0 30px #fff;
+        }
+
+        /* 图层7: 垂直条纹区 (被水平撕裂) */
+        .layer-vertical-stripes {
+            position: absolute;
+            top: 65%;
+            left: 0;
+            width: 100%;
+            height: 20%;
+            background: repeating-linear-gradient(90deg, 
+                #00ffff 0px, #00ffff 12px,
+                #ff00ff 12px, #ff00ff 24px,
+                #ffffff 24px, #ffffff 36px,
+                #000000 36px, #000000 48px,
+                #00ff00 48px, #00ff00 60px,
+                #ff0000 60px, #ff0000 72px,
+                #0000ff 72px, #0000ff 84px,
+                #ff69b4 84px, #ff69b4 96px
+            );
+            background-size: 96px 100%;
+            mix-blend-mode: hard-light;
+            animation: horizontalTear 0.3s infinite steps(2);
+            z-index: 11;
+            filter: blur(1px) brightness(1.3);
+            transform: translateX(5px) skewX(2deg);
+            opacity: 0.9;
+        }
+
+        /* 图层8: 底部色带区 (亮粉/紫/蓝/青 + 棋盘格噪波边缘) */
+        .layer-bottom-bands {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 15%;
+            background: linear-gradient(90deg, 
+                #ff69b4 0%, #ff69b4 20%,
+                #9400d3 20%, #9400d3 40%,
+                #1e90ff 40%, #1e90ff 60%,
+                #00ffff 60%, #00ffff 80%,
+                #ff1493 80%, #ff1493 100%
+            );
+            mix-blend-mode: overlay;
+            animation: horizontalTear 0.5s infinite steps(3);
+            z-index: 12;
+            filter: blur(1.2px) brightness(1.2);
+            transform: translateX(-3px) skewX(-1deg);
+            opacity: 0.9;
+            box-shadow: inset 0 -10px 20px rgba(255,0,255,0.5);
+        }
+
+        /* 底部棋盘格噪波边缘 */
+        .layer-bottom-bands::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: repeating-linear-gradient(45deg, #fff 0px, #fff 4px, #000 4px, #000 8px);
+            opacity: 0.8;
+            animation: noiseFlicker 0.2s infinite;
+            pointer-events: none;
+            mix-blend-mode: difference;
+        }
+
+        /* ========== RGB分离层：制造重影和偏色 ========== */
+        .rgb-separator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0);  /* 透明，仅用于通道效果 */
+            pointer-events: none;
+            z-index: 40;
+            mix-blend-mode: screen;
+            animation: rgbShift 0.4s infinite steps(2);
+            box-shadow: 
+                inset 2px 0 0 rgba(255,0,0,0.5),
+                inset -2px 0 0 rgba(0,0,255,0.5),
+                inset 0 0 0 2px rgba(0,255,0,0.3);
+        }
+
+        /* ========== 额外的雪花噪点层 ========== */
+        .snow-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-radial-gradient(circle at 10px 10px, #fff 1px, transparent 2px, #000 3px, transparent 4px);
+            background-size: 20px 20px;
+            mix-blend-mode: overlay;
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 45;
+            animation: noiseFlicker 0.1s infinite steps(1);
+        }
+
+        /* ========== 水平撕裂锯齿边缘层 ========== */
+        .teeth-edge {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, 
+                transparent 0px, 
+                transparent 4px,
+                rgba(255,0,255,0.1) 4px,
+                rgba(0,255,255,0.1) 8px
+            );
+            background-size: 100% 8px;
+            pointer-events: none;
+            z-index: 50;
+            mix-blend-mode: overlay;
+            animation: horizontalTear 0.3s infinite steps(2);
+        }
+
+        /* 核心文字 —— 像屏幕上的字符，也被故障干扰但依然可读 */
+        .creepy-chinese {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: "Ma Shan Zheng", "Courier New", monospace;
+            font-size: 4rem;
+            font-weight: 900;
+            color: #ff3333;
+            text-shadow: 
+                6px 0 0 rgba(0, 255, 255, 0.9),
+                -6px 0 0 rgba(255, 0, 255, 0.9),
+                0 0 30px #ff0000,
+                0 0 80px #ff4400;
+            z-index: 100;
+            background-color: rgba(0,0,0,0.5);
+            padding: 1rem 2.5rem;
+            letter-spacing: 8px;
+            border-left: 8px solid cyan;
+            border-right: 8px solid magenta;
+            backdrop-filter: blur(2px);
+            white-space: nowrap;
+            animation: textShake 0.2s infinite alternate;
+            mix-blend-mode: hard-light;
+            border-radius: 4px;
+            box-shadow: 0 0 40px rgba(255,0,255,0.5);
+        }
+
+        @keyframes textShake {
+            0% { transform: translate(-50%, -50%) skewX(0deg) translateX(0); text-shadow: 6px 0 cyan, -6px 0 magenta; }
+            20% { transform: translate(-48%, -50%) skewX(-3deg) translateX(4px); text-shadow: 8px 0 magenta, -8px 0 cyan; }
+            40% { transform: translate(-52%, -50%) skewX(3deg) translateX(-4px); text-shadow: -6px 0 yellow, 6px 0 blue; }
+            60% { transform: translate(-49%, -50%) skewX(-1deg) translateX(2px); }
+            80% { transform: translate(-51%, -50%) skewX(2deg) translateX(-3px); text-shadow: 5px 0 lime, -5px 0 red; }
+            100% { transform: translate(-50%, -50%) skewX(0deg) translateX(0); }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 800px) {
+            .creepy-chinese {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+                padding: 0.5rem 1.5rem;
+            }
+        }
+
+        /* 引入马善正 */
+        @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+    </style>
+</head>
+<body>
+    <div class="glitch-crt">
+        <!-- 所有故障图层按照从上到下的顺序排列，模拟多层信号撕裂 -->
+        <div class="fault-layers">
+            <div class="layer-top-noise"></div>
+            <div class="layer-bright-strip"></div>
+            <div class="layer-color-bands-1"></div>
+            <div class="layer-color-bars"></div>
+            <div class="layer-noise-tear"></div>
+            <div class="layer-heavy-tear"></div>
+            <div class="layer-vertical-stripes"></div>
+            <div class="layer-bottom-bands"></div>
+            
+            <!-- 特效层：RGB分离、雪花、锯齿边缘 -->
+            <div class="rgb-separator"></div>
+            <div class="snow-overlay"></div>
+            <div class="teeth-edge"></div>
+        </div>
+
+        <!-- 核心文字，始终位于最上层但受到故障光效影响 -->
+        <div class="creepy-chinese">
+            职责之后……5 81 56 101
+        </div>
+    </div>
+</body>
+</html>

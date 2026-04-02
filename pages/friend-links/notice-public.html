@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告公示 - 溪城大学教务系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+        }
+
+        .page-header {
+            background-color: #005ea5;
+            color: #fff;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 25px;
+            font-weight: 600;
+        }
+
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: normal;
+        }
+
+        .admin-icon {
+            width: 24px;
+            height: 24px;
+            background-color: #fff;
+            color: #005ea5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .breadcrumb {
+            padding: 12px 30px;
+            background-color: #e9f0f7;
+            color: #666;
+            font-size: 14px;
+        }
+        .breadcrumb a {
+            color: #005ea5;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 20px;
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #005ea5;
+            font-size: 20px;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            margin-left: 10px;
+        }
+
+        .btn-primary {
+            background-color: #005ea5;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background-color: #004a85;
+        }
+
+        .notice-list {
+            list-style: none;
+        }
+        .notice-item {
+            padding: 16px 0;
+            border-bottom: 1px dashed #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .notice-item:hover {
+            background-color: #f8fafc;
+        }
+        .notice-item:last-child {
+            border-bottom: none;
+        }
+        .notice-title {
+            font-size: 16px;
+            color: #005ea5;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .notice-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 12px;
+            border-radius: 4px;
+            color: white;
+        }
+        .tag-notice { background-color: #1890ff; }
+        .tag-public { background-color: #52c41a; }
+        .tag-urgent { background-color: #f5222d; }
+        .tag-draft { background-color: #faad14; }
+        .notice-meta {
+            font-size: 13px;
+            color: #999;
+            display: flex;
+            gap: 16px;
+        }
+        .notice-desc {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+        }
+        .page-btn {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            color: #666;
+            cursor: pointer;
+        }
+        .page-btn.active {
+            background-color: #005ea5;
+            color: white;
+            border-color: #005ea5;
+        }
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 900px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 8px;
+            padding: 24px;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+        }
+        .modal-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        textarea.form-control {
+            min-height: 200px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+        .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: #fff;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<header class="page-header">
+    溪城大学教务系统
+    <div class="admin-info">
+        <span class="admin-icon">👤</span>
+        <span>管理员账号</span>
+    </div>
+</header>
+
+<div class="breadcrumb">
+    <a href="edu-home.html">首页</a> &gt; 公告公示
+</div>
+
+<div class="container">
+    <div class="action-bar" style="grid-column: 1/-1;">
+        <button class="btn btn-primary" onclick="openCreateModal()">+ 新建公告</button>
+    </div>
+
+    <div class="card">
+        <h3>已发布</h3>
+        <ul class="notice-list" id="publishedList"></ul>
+        <div class="pagination">
+            <button class="page-btn" disabled>&laquo; 上一页</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">下一页 &raquo;</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>待发布</h3>
+        <ul class="notice-list" id="draftList"></ul>
+        <div class="pagination">
+            <button class="page-btn" disabled>&laquo; 上一页</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn" disabled>下一页 &raquo;</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="createModal">
+    <div class="modal-content" style="max-width:900px;">
+        <span class="modal-close" onclick="closeCreateModal()">&times;</span>
+        <h3 class="modal-title">新建公告</h3>
+        <form id="noticeForm">
+            <div class="form-group">
+                <label class="form-label">公告标题 *</label>
+                <input type="text" class="form-control" id="noticeTitle" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">公告类型 *</label>
+                <select class="form-select" id="noticeType" required>
+                    <option value="">请选择</option>
+                    <option value="notice">通知</option>
+                    <option value="public">公示</option>
+                    <option value="urgent">紧急</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">发布部门 *</label>
+                <input type="text" class="form-control" id="noticeDept" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">公告内容 *</label>
+                <textarea class="form-control" id="noticeContent" required></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">附件（可选）</label>
+                <input type="text" class="form-control" id="noticeAttach" placeholder="多个用逗号分隔">
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" onclick="publishNotice()">立即发布</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// 只在内存中保存，刷新即清空
+let publishedNotices = [
+  {
+    id: "fake1",
+    title: "关于开展2026年春季学期教学检查工作的通知",
+    type: "notice",
+    typeText: "通知",
+    time: "2026-02-25",
+    dept: "教务处",
+    content: "<p>为保障春季学期教学秩序稳定，学校定于2月26日至3月10日开展教学检查工作，请各学院认真落实。</p>",
+    attach: []
+  },
+  {
+    id: "fake2",
+    title: "关于校园网络设备升级维护的公示",
+    type: "public",
+    typeText: "公示",
+    time: "2026-02-24",
+    dept: "信息化中心",
+    content: "<p>校园核心网络将于2月28日0:00-6:00升级维护，期间可能出现短暂断网，请师生提前做好准备。</p>",
+    attach: []
+  },
+  {
+    id: "fake3",
+    title: "紧急通知：校内部分楼宇停水通知",
+    type: "urgent",
+    typeText: "紧急",
+    time: "2026-02-23",
+    dept: "后勤保障处",
+    content: "<p>因校内供水管道检修，3号宿舍楼、7号教学楼将于2月24日9:00-17:00暂停供水，请相关师生提前储水，由此带来不便敬请谅解。</p>",
+    attach: []
+  }
+];
+const draftNotices = [
+  {
+    id: "p2",
+    title: "关于注销纪妙春同学学籍的公告",
+    type: "public",
+    typeText: "公示",
+    time: "2025-12-18",
+    dept: "溪城大学教务处",
+    content: "<p>各学院、各部门：</p><p>&nbsp;&nbsp;纪妙春，女，计算机科学与技术专业2022级学生，学号：202201458。该生于近日在校外意外失足落水，经抢救无效不幸离世。</p><p>&nbsp;&nbsp;根据《普通高等学校学生管理规定》及《溪城大学学生学籍管理办法》相关规定，经学校研究决定，自即日起注销纪妙春同学学籍。</p><p>特此公告。</p>",
+    attach: []
+  },
+  {
+    id: "p3",
+    title: "关于注销居柏同学学籍的公告",
+    type: "public",
+    typeText: "公示",
+    time: "2026-01-15",
+    dept: "溪城大学教务处",
+    content: "<p>&nbsp;&nbsp;各学院、各部门：</p><p>&nbsp;&nbsp;居柏，男，法学专业2022级学生，学号：202203208。该生于近日在校外被狂犬病犬只咬伤，因未及时就医不幸离世。</p><p>&nbsp;&nbsp;根据《普通高等学校学生管理规定》及《溪城大学学生学籍管理办法》相关规定，经学校研究决定，自即日起注销居柏同学学籍。</p><p>&nbsp;&nbsp;特此公告。</p>",
+    attach: []
+  },
+  {
+    id: "p4",
+    title: "关于孙君昊同学学籍处理的公告",
+    type: "public",
+    typeText: "公示",
+    time: "2026-01-20",
+    dept: "溪城大学教务处",
+    content: "<p>&nbsp;&nbsp;各学院、各部门：</p><p>&nbsp;&nbsp;孙君昊，男，电子信息工程专业2022级学生，学号：202205621。该生于近日被高空坠物砸伤，致植物人状态。</p><p>&nbsp;&nbsp;根据《普通高等学校学生管理规定》及《溪城大学学生学籍管理办法》相关规定，经学校研究决定，保留该生学籍延期三年。若三年期满仍未能康复复学，将按规定自动注销学籍。</p><p>&nbsp;&nbsp;特此公告。</p>",
+    attach: []
+  },
+  {
+    id: "p5",
+    title: "关于卞瑾瑜同学自愿放弃保研资格的公示",
+    type: "public",
+    typeText: "公示",
+    time: "2025-XX-XX",
+    dept: "溪城大学教务处",
+    content: "<p>各学院、各部门：</p><p>&nbsp;&nbsp;卞瑾瑜，女，计算机科学与技术专业2022级学生，学号：202201029。该生在保研推免综合排名中位列专业第二（综合成绩91.85分），具备推荐免试攻读研究生资格。</p><p>&nbsp;&nbsp;近日，该生向所在学院提交书面申请，因个人原因自愿放弃保研资格。根据《溪城大学推荐优秀应届本科毕业生免试攻读研究生工作管理办法》相关规定，其放弃的名额将按照专业综合成绩排名依次递补。</p><p>&nbsp;&nbsp;公示期：2025年X月X日至X月Y日（共5个工作日）。如有异议，请在公示期内以书面形式向教务处反映。</p><p>溪城大学教务处<br>2025年X月X日</p>",
+    attach: []
+  }
+];
+
+function unescapeHtml(html) {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div.textContent || div.innerText || "";
+}
+
+function renderList() {
+  const pubList = document.getElementById("publishedList");
+  const draftList = document.getElementById("draftList");
+  pubList.innerHTML = "";
+  draftList.innerHTML = "";
+
+  publishedNotices.forEach(item => {
+    const li = document.createElement("li");
+    li.className = "notice-item";
+    li.onclick = () => {
+      window.location.href = `notice-detail.html?type=published&id=${item.id}`;
+    };
+    const pure = unescapeHtml(item.content).replace(/<[^>]+>/g, "");
+    const short = pure.slice(0, 100);
+    li.innerHTML = `
+      <div class="notice-title">
+        <span class="notice-tag tag-${item.type}">${item.typeText}</span>
+        ${item.title}
+      </div>
+      <div class="notice-meta">
+        <span>发布时间：${item.time}</span>
+        <span>${item.dept}</span>
+      </div>
+      <div class="notice-desc">${short}...</div>`;
+    pubList.appendChild(li);
+  });
+
+  draftNotices.forEach(item => {
+    const li = document.createElement("li");
+    li.className = "notice-item";
+    li.onclick = () => {
+      window.location.href = `notice-detail.html?type=draft&id=${item.id}`;
+    };
+    const pure = unescapeHtml(item.content).replace(/<[^>]+>/g, "");
+    const short = pure.slice(0, 100);
+    li.innerHTML = `
+      <div class="notice-title">
+        <span class="notice-tag tag-draft">草稿</span>
+        ${item.title}
+      </div>
+      <div class="notice-meta">
+        <span>更新时间：${item.time}</span>
+        <span>${item.dept}</span>
+      </div>
+      <div class="notice-desc">${short}...</div>`;
+    draftList.appendChild(li);
+  });
+}
+
+function openCreateModal() {
+  document.getElementById("noticeForm").reset();
+  document.getElementById("createModal").style.display = "flex";
+}
+
+function closeCreateModal() {
+  document.getElementById("createModal").style.display = "none";
+}
+
+function uid() {
+  return "u" + Date.now() + Math.random().toString(36).slice(2,6);
+}
+
+// 发布后只在内存生效，刷新就没
+function publishNotice() {
+  const title = document.getElementById("noticeTitle").value.trim();
+  const type = document.getElementById("noticeType").value;
+  const dept = document.getElementById("noticeDept").value.trim();
+  const content = document.getElementById("noticeContent").value.replace(/\n/g, "<br>");
+  const attach = (document.getElementById("noticeAttach").value || "").split(",").map(x=>x.trim()).filter(Boolean);
+
+  if (!title || !type || !dept || !content) {
+    alert("请填写所有必填项！");
+    return;
+  }
+
+  const now = new Date();
+  const time = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  const typeText = type === "public" ? "公示" : type === "urgent" ? "紧急" : "通知";
+
+  const newNotice = {
+    id: uid(), title, type, typeText, time, dept, content, attach
+  };
+
+  // 只加在内存，不存本地
+  publishedNotices.unshift(newNotice);
+  closeCreateModal();
+  renderList();
+  alert("发布成功！");
+}
+
+window.onclick = function(e) {
+  if (e.target === document.getElementById("createModal")) closeCreateModal();
+}
+
+renderList();
+</script>
+</body>
+</html>

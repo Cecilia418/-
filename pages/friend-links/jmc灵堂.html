@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纪妙春 · 灵堂</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            font-family: "SimSun", "宋体", serif;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .fullscreen-image {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            overflow: hidden;
+        }
+
+        .fullscreen-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .black-section {
+            width: 100%;
+            background-color: #000000;
+            min-height: 100vh;
+            padding: 10vh 0;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .poem-container {
+            width: 100%;
+            display: flex;
+            /* 核心：把两列距离拉近，右侧文字向左移 */
+            gap: 15vw;
+            padding: 0 5vw;
+            line-height: 2.3;
+            font-size: 26px;
+            text-shadow: 
+                0 0 10px rgba(255,255,255,0.9),
+                0 0 20px rgba(255,255,255,0.7),
+                0 0 30px rgba(255,255,255,0.5);
+        }
+
+        .poem-left {
+            text-align: left;
+        }
+
+        .poem-right {
+            text-align: left;
+            padding-top: 4.6em;
+        }
+    </style>
+</head>
+<body>
+    <div class="fullscreen-image">
+        <img src="../../picture/纪妙春灵堂.jpg" alt="纪妙春灵堂">
+    </div>
+
+    <div class="black-section">
+        <div class="poem-container">
+            <div class="poem-left">
+春<br>
+沉沦<br>
+妙龄身<br>
+清波葬魂<br>
+本是取骊人<br>
+劈波斩浪无伦<br>
+怎料暗流噬此身<br>
+毁弃琅嬛换了贪嗔<br>
+明珠蒙尘冤屈向谁陈<br>
+清溪底婆娑泪无痕空恨<br>
+廿载光阴皎皎陷泥根<br>
+从此常伴水冷月昏<br>
+未抵人心蛇蝎深<br>
+涛声咽尽余忿<br>
+此意怎堪申<br>
+芳华早殒<br>
+水犹温<br>
+谁问<br>
+春
+            </div>
+            <div class="poem-right">
+来不及了。溪流吞咽最后一抹 生息 后。<br>
+你   成为这一轮的首枚骨牌。<br>
+自诩溪水的代行者<br>
+瞽目还是倨侮，闹出个善泳者溺于水的笑话。
+            </div>
+        </div>
+    </div>
+</body>
+</html>

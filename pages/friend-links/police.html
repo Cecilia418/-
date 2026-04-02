@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>串联动画：淡入 → 警车行驶</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0e2b83;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        img {
+            opacity: 0;
+            animation: fadeIn 3s ease 1s forwards;
+            max-width: 100%;
+            max-height: 120vh;
+            display: block;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .road {
+            position: absolute;
+            top: 50%; left: 0;
+            transform: translateY(-50%);
+            width: 100%; height: 400px;
+            background: #333;
+            display: none;
+        }
+        .road::before {
+            content: ""; position: absolute; top: 50%; left: 0;
+            width: 100%; height: 4px;
+            background: repeating-linear-gradient(to right, #fff 0px, #fff 50px, transparent 50px, transparent 100px);
+            transform: translateY(-50%);
+            animation: moveRoad 1s linear infinite;
+        }
+        @keyframes moveRoad {
+            from { background-position: 0 0; }
+            to { background-position: -100px 0; }
+        }
+        #car {
+            position: absolute;
+            top: 50%;
+            left: -300px;
+            width: 500px;
+            height: 300px;
+            margin-top: -150px;
+            z-index: 10;
+            background: url("../../picture/警车.png") center/contain no-repeat;
+        }
+        .hint {
+            position: fixed; top: 20px; width: 100%; text-align: center;
+            color: #fff; font-size: 16px; pointer-events: none;
+            font-family: "Microsoft YaHei", sans-serif;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <img src="../../picture/paper.png" alt="淡入图片" id="fadeImg">
+
+    <div class="road" id="roadSection">
+        <div id="car"></div>
+    </div>
+
+    <audio id="sirenAudio" src="../../files/警笛声.m4a"></audio>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <script>
+        window.onload = () => {
+            const img = document.getElementById('fadeImg');
+            const road = document.getElementById('roadSection');
+            const audio = document.getElementById('sirenAudio');
+            let playCount = 0; // 记录播放次数
+
+            // 7秒后切换到警车动画
+            setTimeout(() => {
+                img.style.display = 'none';
+                road.style.display = 'block';
+                document.body.style.backgroundColor = '#111';
+
+                // 警车循环行驶
+                gsap.fromTo("#car",
+                    { x: -100 },
+                    { x: window.innerWidth + 500, duration: 4, ease: "none", repeat: -1 }
+                );
+
+                // 播放音频，并监听播放完成
+                audio.loop = false;
+                audio.play().catch(() => {});
+
+                // 监听音频播放结束
+                audio.addEventListener('ended', () => {
+                    playCount++;
+                    if (playCount < 1) {
+                        // 播放第 2 遍
+                        audio.play();
+                    } else {
+                        // 2遍播放完毕 → 跳转到结局三
+                        window.location.href = "./ending3.html";
+                    }
+                });
+
+            }, 7000);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告详情 - 溪城大学教务系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            background: #f5f7fa;
+            padding: 30px 20px;
+        }
+        .detail-card {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .back {
+            margin-bottom: 20px;
+        }
+        .back a {
+            color: #005ea5;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .notice-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #333;
+            line-height: 1.4;
+        }
+        .notice-info {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .notice-content {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #333;
+        }
+        .notice-content p {
+            margin-bottom: 16px;
+        }
+        .student-id {
+            color: #005ea5 !important;
+            font-weight: bold !important;
+            text-decoration: underline !important;
+            cursor: pointer !important;
+        }
+    </style>
+</head>
+<body>
+<div class="detail-card">
+    <div class="back">
+        <a href="javascript:history.back()">← 返回</a>
+    </div>
+    <div class="notice-title" id="detailTitle"></div>
+    <div class="notice-info" id="detailInfo"></div>
+    <div class="notice-content" id="detailContent"></div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const type = params.get('type');
+const id = params.get('id');
+
+const defaultPublished = [
+  {
+    id: "fake1",
+    title: "关于开展2026年春季学期教学检查工作的通知",
+    time: "2026-02-25",
+    dept: "教务处",
+    content: "<p>为保障春季学期教学秩序稳定，学校定于2月26日至3月10日开展教学检查工作，请各学院认真落实。</p>"
+  },
+  {
+    id: "fake2",
+    title: "关于校园网络设备升级维护的公示",
+    time: "2026-02-24",
+    dept: "信息化中心",
+    content: "<p>校园核心网络将于2月28日0:00-6:00升级维护，期间可能出现短暂断网，请师生提前做好准备。</p>"
+  },
+  {
+    id: "fake3",
+    title: "紧急通知：校内部分楼宇停水通知",
+    time: "2026-02-23",
+    dept: "后勤保障处",
+    content: "<p>因校内供水管道检修，3号宿舍楼、7号教学楼将于2月24日9:00-17:00暂停供水，请相关师生提前储水，由此带来不便敬请谅解。</p>"
+  }
+];
+
+const defaultDrafts = [
+  {
+    id: "p2",
+    title: "关于注销纪妙春同学学籍的公告",
+    time: "2025-12-18",
+    dept: "溪城大学教务处",
+    content: "<p>各学院、各部门：</p><p>&nbsp;&nbsp;纪妙春，女，计算机科学与技术专业2022级学生，学号：202201458。该生于近日在校外意外失足落水，经抢救无效不幸离世。</p><p>&nbsp;&nbsp;根据《普通高等学校学生管理规定》及《溪城大学学生学籍管理办法》相关规定，经学校研究决定，自即日起注销纪妙春同学学籍。</p><p>特此公告。</p>"
+  },
+  {
+    id: "p3",
+    title: "关于注销居柏同学学籍的公告",
+    time: "2026-01-15",
+    dept: "溪城大学教务处",
+    content: "<p>&nbsp;&nbsp;各学院、各部门：</p><p>&nbsp;&nbsp;居柏，男，法学专业2022级学生，学号：202203208。该生于近日在校外被狂犬病犬只咬伤，因未及时就医不幸离世。</p><p>&nbsp;&nbsp;根据《普通高等学校学生管理规定》及《溪城大学学生学籍管理办法》相关规定，经学校研究决定，自即日起注销居柏同学学籍。</p><p>&nbsp;&nbsp;特此公告。</p>"
+  },
+  {
+    id: "p4",
+    title: "关于孙君昊同学学籍处理的公告",
+    time: "2026-01-20",
+    dept: "溪城大学教务处",
+    content: "<p>&nbsp;&nbsp;各学院、各部门：</p><p>&nbsp;&nbsp;孙君昊，男，电子信息工程专业2022级学生，学号：202205621。该生于近日被高空坠物砸伤，致植物人状态。</p><p>&nbsp;&nbsp;根据《普通高等学校学生管理规定》及《溪城大学学生学籍管理办法》相关规定，经学校研究决定，保留该生学籍延期三年。若三年期满仍未能康复复学，将按规定自动注销学籍。</p><p>&nbsp;&nbsp;特此公告。</p>"
+  },
+  {
+    id: "p5",
+    title: "关于卞瑾瑜同学自愿放弃保研资格的公示",
+    time: "2025-12-20",
+    dept: "溪城大学教务处",
+    content: "<p>各学院、各部门：</p><p>&nbsp;&nbsp;卞瑾瑜，女，计算机科学与技术专业2022级学生，学号：202201029。该生在保研推免综合排名中位列专业第二（综合成绩91.85分），具备推荐免试攻读研究生资格。</p><p>&nbsp;&nbsp;近日，该生向所在学院提交书面申请，因个人原因自愿放弃保研资格。根据《溪城大学推荐优秀应届本科毕业生免试攻读研究生工作管理办法》相关规定，其放弃的名额将按照专业综合成绩排名依次递补。</p><p>&nbsp;&nbsp;公示期：2025年12月20日至12月26日（共5个工作日）。如有异议，请在公示期内以书面形式向教务处反映。</p><p>溪城大学教务处<br>2025年12月20日</p>"
+  }
+];
+
+let notice = null;
+if (type === "published") {
+  notice = defaultPublished.find(n => n.id === id);
+} else {
+  notice = defaultDrafts.find(n => n.id === id);
+}
+
+if (notice) {
+  document.getElementById('detailTitle').innerText = notice.title;
+  document.getElementById('detailInfo').innerText = `发布时间：${notice.time} ｜ 发布单位：${notice.dept}`;
+  let content = notice.content;
+  
+  // 学号与HTML文件的映射表
+const studentIdToFile = {
+  "202201458": "纪妙春学生档案.html",   // 直接使用中文文件名
+  "202203208": "居柏学生档案.html",     // 直接使用中文文件名
+  "202205621": "孙君昊学生档案.html",   // 直接使用中文文件名
+  
+};
+
+// 正则替换，生成指向对应HTML的链接（同一文件夹下）
+content = content.replace(/(学号[:：]\s*)(\d+)/g, (match, p1, studentId) => {
+  const fileName = studentIdToFile[studentId];
+  if (fileName) {
+    // 同一文件夹下，直接使用中文文件名
+    return `${p1}<a class="student-id" href="${fileName}" target="_blank">${studentId}</a>`;
+  } else {
+    // 如果未找到，返回普通文本
+    return `${p1}${studentId}`;
+  }
+});
+  document.getElementById('detailContent').innerHTML = content;
+} else {
+  document.getElementById('detailTitle').innerText = "公告不存在";
+  document.getElementById('detailInfo').innerText = "";
+  document.getElementById('detailContent').innerHTML = "<p>玩家发布的内容已自动消失。</p>";
+}
+</script>
+</body>
+</html>

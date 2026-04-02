@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>同步闪烁消失</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #000;
+
+            /* 闪红从文字消失那一刻开始 */
+            animation: pageFlash 1.4s 0.8s ease-out forwards;
+        }
+
+        .bloody-text {
+            font-size: 80px;
+            font-family: "Ma Shan Zheng", "SimHei", sans-serif;
+            color: #a80000; /* 稍亮的暗红 */
+            position: relative;
+
+            animation:
+                twitchMore 0.8s ease-in-out,
+                textDisappear 0.01s 0.8s linear forwards; /* 与闪红同步 */
+        }
+
+        /* 多次抖动（明确可感知） */
+        @keyframes twitchMore {
+            0%   { transform: translate(0,0); }
+            10%  { transform: translate(-3px,2px); }
+            20%  { transform: translate(3px,-2px); }
+            30%  { transform: translate(-4px,3px); }
+            40%  { transform: translate(4px,-3px); }
+            50%  { transform: translate(-3px,2px); }
+            60%  { transform: translate(3px,-2px); }
+            70%  { transform: translate(-2px,1px); }
+            100% { transform: translate(0,0); }
+        }
+
+        /* 字与红屏同步消失 */
+        @keyframes textDisappear {
+            to { opacity: 0; }
+        }
+
+        /* 纯色暗红闪屏 */
+        @keyframes pageFlash {
+            0%   { background-color: #000; }
+            20%  { background-color: #a80000; }
+            80%  { background-color: #a80000; }
+            100% { background-color: #000; }
+        }
+    </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="bloody-text">溪城大学</div>
+</body>
+</html>

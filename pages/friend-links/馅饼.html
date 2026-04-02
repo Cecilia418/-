@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>假连翘 · 抉择</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            font-family: 'Times New Roman', '宋体', 'Microsoft YaHei', sans-serif;
+            overflow-x: hidden;
+            color: white;
+            height: 100%;
+        }
+
+        /* 页面内容，足够高以支持下滑 */
+        .content {
+            min-height: 300vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 20vh;
+            position: relative;
+        }
+
+        /* 图片容器 */
+        .image-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .image-wrapper {
+            width: 500px;
+            height: auto;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 问题文字 */
+        .question {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            font-weight: 300;
+        }
+
+        /* 按钮区域 */
+        .button-group {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 50px;
+            z-index: 20;
+        }
+
+        .btn {
+            padding: 16px 48px;
+            font-size: 22px;
+            font-weight: bold;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4);
+            letter-spacing: 2px;
+        }
+
+        .btn-want {
+            background-color: #8b0000;
+            color: white;
+        }
+
+        .btn-want:hover {
+            background-color: #a50000;
+            transform: scale(1.08);
+            box-shadow: 0 12px 30px rgba(255, 0, 0, 0.7);
+        }
+
+        .btn-dont {
+            background-color: #330000;
+            color: #ffaaaa;
+        }
+
+        .btn-dont:hover {
+            background-color: #550000;
+            color: white;
+            transform: scale(1.08);
+        }
+
+        /* 下坠动画 - 快速直线 */
+        .falling-straight {
+            animation: straightFall 0.4s ease-in forwards;
+        }
+
+        @keyframes straightFall {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(1000px);
+            }
+        }
+
+        /* 闪屏遮罩层 */
+        .flash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #8b0000;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.1s;
+        }
+
+        .flash-overlay.active {
+            animation: redFlash 0.5s forwards;
+        }
+
+        @keyframes redFlash {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* 叠化转场层 */
+        .transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            z-index: 10000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .transition-overlay.active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- 闪屏遮罩层 -->
+    <div class="flash-overlay" id="flashOverlay"></div>
+    
+    <!-- 叠化转场层 -->
+    <div class="transition-overlay" id="transitionOverlay"></div>
+
+    <div class="content" id="content">
+        <!-- 图片区域 -->
+        <div class="image-section">
+            <div class="image-wrapper" id="imageWrapper">
+                <!-- 初始图片：假连翘.jpg -->
+                <img src="../../picture/假连翘.jpg" alt="假连翘" id="flowerImage">
+            </div>
+
+            <!-- 问题文字 -->
+            <div class="question" id="questionText">想摸摸这朵花吗？</div>
+
+            <!-- 两个红色按钮 -->
+            <div class="button-group" id="buttonGroup">
+                <button class="btn btn-want" id="wantBtn">想</button>
+                <button class="btn btn-dont" id="dontBtn">不想</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // 获取元素
+            const imageWrapper = document.getElementById('imageWrapper');
+            const flowerImage = document.getElementById('flowerImage');
+            const wantBtn = document.getElementById('wantBtn');
+            const dontBtn = document.getElementById('dontBtn');
+            const flashOverlay = document.getElementById('flashOverlay');
+            const transitionOverlay = document.getElementById('transitionOverlay');
+            
+            // 状态标记
+            let isAnimating = false;
+            let hasFallen = false;
+            let imageChanged = false;
+            
+            // 跳转目标页面
+            const TARGET_PAGE = 'sjh灵堂.html';
+            
+            // 创建音频对象
+            let crashAudio = null;
+            
+            // 初始化音频
+            function initAudio() {
+                try {
+                    crashAudio = new Audio('../../files/碎.m4a');
+                    crashAudio.preload = 'auto';
+                    console.log('音频初始化成功');
+                } catch (e) {
+                    console.log('音频初始化失败:', e);
+                }
+            }
+            
+            // 页面加载时初始化音频
+            initAudio();
+            
+            // 播放音效函数
+            function playCrashSound() {
+                if (!crashAudio) {
+                    initAudio();
+                }
+                
+                if (crashAudio) {
+                    // 重置音频
+                    crashAudio.pause();
+                    crashAudio.currentTime = 0;
+                    
+                    // 尝试播放
+                    let playPromise = crashAudio.play();
+                    
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.log('音频播放失败，尝试创建新音频:', error);
+                            try {
+                                let newAudio = new Audio('../../files/碎.m4a');
+                                newAudio.play().catch(e => {
+                                    console.log('重试播放仍然失败:', e);
+                                });
+                            } catch (e) {
+                                console.log('创建新音频失败:', e);
+                            }
+                        });
+                    }
+                }
+            }
+            
+            // 叠化转场跳转
+            function transitionToNextPage() {
+                console.log('开始叠化转场...');
+                
+                // 激活叠化层
+                transitionOverlay.classList.add('active');
+                
+                // 等待叠化动画完成后跳转
+                setTimeout(() => {
+                    console.log('跳转到目标页面:', TARGET_PAGE);
+                    window.location.href = TARGET_PAGE;
+                }, 1500); // 1.5秒后跳转，与CSS过渡时间一致
+            }
+            
+            // 不想按钮点击事件
+            dontBtn.addEventListener('click', function() {
+                if (isAnimating || hasFallen) return;
+                alert('再想想');
+            });
+            
+            // 想按钮点击事件
+            wantBtn.addEventListener('click', function() {
+                if (isAnimating || hasFallen) return;
+                
+                startFalling();
+            });
+            
+            // 开始下坠流程
+            function startFalling() {
+                isAnimating = true;
+                hasFallen = true;
+                
+                console.log('开始下坠...');
+                
+                // 1. 移除已有的动画类
+                imageWrapper.classList.remove('falling-straight');
+                void imageWrapper.offsetWidth;
+                  // 3. 开始播放音效（与下坠同时）
+                playCrashSound();
+                
+                // 2. 添加下坠动画
+                imageWrapper.classList.add('falling-straight');
+                
+              
+                // 4. 页面同步下滑
+                const startY = window.scrollY;
+                const targetScroll = 1100;
+                const duration = 400;
+                const startTime = performance.now();
+                
+                function scrollStep(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    const easeProgress = progress * progress;
+                    const scrollY = startY + targetScroll * easeProgress;
+                    
+                    window.scrollTo(0, scrollY);
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(scrollStep);
+                    }
+                }
+                
+                requestAnimationFrame(scrollStep);
+                
+                // 5. 等待下坠动画完全结束后再触发闪屏 + 换图
+                setTimeout(() => {
+                    console.log('下坠动画完全结束，现在触发闪屏并换图');
+                    
+                    if (!imageChanged) {
+                        flowerImage.src = '../../picture/碎假连翘.jpg';
+                        imageChanged = true;
+                        console.log('图片已切换为: 碎假连翘.jpg');
+                    }
+                    
+                    // 触发闪屏动画
+                    flashOverlay.classList.add('active');
+                    
+                    // 闪屏结束后停留3秒，然后叠化转场
+                    setTimeout(() => {
+                        flashOverlay.classList.remove('active');
+                        
+                        console.log('闪屏结束，停留3秒后叠化转场');
+                        
+                        // 停留3秒
+                        setTimeout(() => {
+                            // 开始叠化转场
+                            transitionToNextPage();
+                        }, 5000); // 停留3秒
+                        
+                    }, 1000); // 闪屏持续0.5秒
+                    
+                }, 400);
+            }
+            
+            // 点击图片也触发想
+            imageWrapper.addEventListener('click', function() {
+                if (!isAnimating && !hasFallen) {
+                    startFalling();
+                }
+            });
+            
+            // 预加载音频
+            wantBtn.addEventListener('mouseenter', function() {
+                if (!crashAudio) {
+                    initAudio();
+                }
+            });
+            
+        })();
+    </script>
+</body>
+</html>

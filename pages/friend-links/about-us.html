@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于本馆 - 溪城大学图书馆</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        /* ========== 1. 顶部头部：logo + 联系入口（和首页完全一致） ========== */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 22px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 {
+            font-size: 40px;
+            color: #005ea5; /* 保留原有蓝色 */
+            font-weight: normal; /* 书法体取消加粗更自然 */
+            font-family: 'Ma Shan Zheng', cursive; /* 马善政书法体 */
+        }
+
+        .header-right {
+            display: flex;
+            gap: 20px;
+        }
+
+        .header-right a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .header-right a:hover {
+            color: #005ea5;
+        }
+
+        /* ========== 2. 顶部横向导航栏核心样式（和首页完全一致） ========== */
+        .main-nav-container {
+            width: 100%;
+            background-color: #005ea5; /* 上大图书馆蓝色主调 */
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-nav {
+            width: 100%;
+        }
+
+        /* 菜单列表：flex实现横向排列 */
+        .menu-list {
+            list-style: none; /* 去掉默认小圆点 */
+            display: flex; /* 核心：横向排列 */
+            margin: 0;
+            padding: 0 20px;
+        }
+
+        .menu-item {
+            margin: 0;
+        }
+
+        /* 菜单项链接样式 */
+        .menu-item a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 35px; /* 核心：上下18px，左右35px */
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px; /* 字体放大更协调 */
+        }
+        /* 选中的菜单项高亮（关于本馆页高亮） */
+        .menu-item.active a {
+            background-color: #004a8c;
+        }
+
+        /* 鼠标悬浮效果 */
+        .menu-item a:hover {
+            background-color: #004a8c;
+        }
+
+        /* 图标样式微调 */
+        .menu-item a i {
+            font-size: 14px;
+        }
+
+        /* 主内容容器 */
+        .content-wrap {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* 通用卡片样式 */
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #005ea5;
+            font-size: 22px;
+        }
+
+        /* 关于本馆内容样式 */
+        .intro-section {
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 2;
+        }
+
+        .intro-section h3 {
+            font-size: 20px;
+            color: #005ea5;
+            margin: 25px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .intro-section p {
+            margin-bottom: 15px;
+            text-indent: 2em; /* 首行缩进2字符 */
+        }
+
+        /* 响应式适配（手机端） */
+        @media (max-width: 768px) {
+            .menu-list {
+                flex-wrap: wrap;
+            }
+            .menu-item a {
+                padding: 12px 15px;
+            }
+            .header-top {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            .intro-section p {
+                text-indent: 1em; /* 手机端缩进减小 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ========== 顶部头部（和首页完全一致） ========== -->
+    <div class="header-top">
+        <div class="logo">
+            <h1>溪城大学图书馆</h1>
+        </div>
+        <div class="header-right">
+            <a href="contact-us.html">联系我们</a>
+            <a href="#">微信公众号</a>
+        </div>
+    </div>
+
+    <!-- about-us.html 里的导航栏完整代码 -->
+<div class="main-nav-container">
+    <nav class="top-nav">
+        <ul class="menu-list">
+            <!-- 关键：../../ 回到根目录找 index.html（2个../） -->
+            <li class="menu-item"><a href="../../index.html"><i class="fa fa-home"></i> 首页</a></li>
+            <li class="menu-item"><a href="#"><i class="fa fa-book"></i> 资源</a></li>
+            <li class="menu-item"><a href="#"><i class="fa fa-puzzle-piece"></i> 服务</a></li>
+            <!-- 关于本馆自身：当前文件夹，路径不变 -->
+            <li class="menu-item active"><a href="about-us.html"><i class="fa fa-question-circle"></i> 关于本馆</a></li>
+            <!-- 关键：../../ 回到根目录找 contact-us.html（2个../） -->
+            <li class="menu-item"><a href="../../contact-us.html"><i class="fa fa-user"></i> 联系我们</a></li>
+        </ul>
+    </nav>
+</div>
+
+    <!-- 主内容区域 -->
+    <div class="content-wrap">
+        <div class="card">
+            <h2>关于本馆</h2>
+            <div class="intro-section">
+                <p>溪城大学图书馆建成于<strong>1985</strong>年，历史悠久，自建校初年便投入使用。是学校的文献信息中心和学术交流中心。2008年迁入现馆舍，坐落于校园核心区域，毗邻明湖，环境清幽。馆舍建筑面积3.2万平方米。</p>
+                
+                <h3>馆藏资源</h3>
+                <p>图书馆秉持“以藏为基，以用为本”的资源建设理念，形成了纸质文献与数字资源并重、多学科覆盖、多载体并存的馆藏体系。截至2025年8月，馆藏中外文纸质文献185万余册，涵盖人文社科、理工医学等全部学科领域；订阅中外文数据库82个，电子图书240余万册，电子期刊3.5万余种，学位论文600余万篇。近年来重点加强特色馆藏建设，建成“溪城地方文献特藏”“民国教育史料库”等特色资源库。</p>
+                
+                <h3>馆舍布局</h3>
+                <p>图书馆采用藏、借、阅、咨一体化大流通服务模式。一楼设总服务台、自助借还区、24小时自助还书机和休闲阅览厅；二楼至四楼按学科划分主题阅览区，包括人文社科阅览区、自然科学阅览区、艺术特藏阅览区等；五楼为研究研修区与办公区，设有小组研讨室12间、个人研修座80席，同时容纳图书馆行政办公区域及学术报告厅。全馆阅览座位2800余个，均配备电源及网络接口。</p>
+                
+                <h3>服务模式</h3>
+                <p>图书馆坚持“读者第一，服务育人”的宗旨，周开放时间98小时，数字资源提供7×24小时校外访问服务。主要服务项目包括：书刊借阅、馆际互借与文献传递、科技查新与查收查引、信息素养教育、学科服务、空间预约、阅读推广等。近年来持续推动智慧图书馆建设，建成统一检索平台、移动图书馆APP、自助借还系统，实现纸电资源一站式检索与服务。</p>
+                
+                <h3>文化理念</h3>
+                <p>图书馆致力于打造“书香溪大”阅读品牌，常年开展“明湖读书会”“古籍保护体验日”等特色文化活动，营造浓厚书香氛围。秉承“资源育人、环境育人、服务育人”的理念，努力将图书馆建设成为师生求学问道的知识殿堂、思想碰撞的学术客厅、滋养心灵的精神家园。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

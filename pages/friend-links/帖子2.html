@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>溪城大学学生论坛 - 宿舍生活</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+
+        /* 蓝白色清爽风格 */
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* 顶部导航栏 */
+        .header {
+            background-color: #005ea5;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .header .logo {
+            display: flex;
+            align-items: center;
+        }
+        .header .logo h1 {
+            font-size: 25px;
+            font-weight: bold;
+            margin-left: 15px;
+            color: #ffffff;
+        }
+        .header .nav {
+            margin-left: 50px;
+        }
+        .header .nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+        .header .nav a:hover {
+            color: #cce7ff;
+        }
+        .header .user {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+        .header .user a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-left: 20px;
+            transition: 0.2s;
+        }
+        .header .user a:hover {
+            color: #cce7ff;
+        }
+
+        /* 公告栏 */
+        .top-ad {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #e6f4ff;
+            border: 1px solid #005ea5;
+            border-radius: 8px;
+        }
+        .top-ad .ad-title {
+            color: #005ea5;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* 主体容器 */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* 中间帖子详情 */
+        .main-content {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .main-content .post-title {
+            font-size: 24px;
+            color: #005ea5;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .main-content .post-meta {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #eee;
+        }
+
+        /* 楼主 & 回复样式 */
+        .reply-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .reply-item.header {
+            background: none;
+            box-shadow: none;
+            height: auto;
+            padding: 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        .reply-item .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #e6f4ff;
+            margin-right: 12px;
+        }
+        .reply-item .user-info {
+            flex: 1;
+        }
+        .reply-item .username {
+            font-weight: bold;
+            color: #333;
+            font-size: 15px;
+        }
+        .reply-item .floor {
+            color: #005ea5;
+            font-size: 13px;
+            margin-left: 8px;
+        }
+        .reply-item .time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 3px;
+        }
+        .reply-item .content {
+            margin-top: 10px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .reply-item .quote {
+            background: #f7f9fc;
+            padding: 8px 12px;
+            border-left: 3px solid #ccc;
+            margin: 8px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* 底部 */
+        .footer {
+            background-color: #005ea5;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="header">
+        <div class="logo">
+            <h1>溪城大学学生论坛</h1>
+        </div>
+        <div class="nav">
+            <a href="campus-forum.html"><i class="fa fa-home"></i> 首页</a>
+        </div>
+        <div class="user">
+            <a href="#"><i class="fa fa-user"></i> 登录</a>
+            <a href="#"><i class="fa fa-pen"></i> 注册</a>
+        </div>
+    </div>
+
+    <!-- 路径导航 -->
+    <div class="top-ad">
+        <div class="ad-title">校园论坛 > 宿舍生活 > 【深夜闲谈】有人听说过“溪城郎”的旧事吗？</div>
+    </div>
+
+    <!-- 主体内容（纯净详情页） -->
+    <div class="container">
+        <div class="main-content">
+            <div class="post-title">【深夜闲谈】有人听说过“溪城郎”的旧事吗？</div>
+            <div class="post-meta">发帖时间：2026-01-15 23:47</div>
+
+            <!-- 楼主 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">溪边旧事 <span class="floor">楼主</span></div>
+                        <div class="time">2026-01-15 23:47 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    今晚睡不着，想起表姐以前跟我讲过一些学校的老传闻。她说咱们学校论坛里藏着一个“长眠不醒的人”，只要在午夜钟声响起的时候，诚心供奉那位“溪城郎”，念一句不知道什么的咒语，就会发生意想不到的事情。<br><br>
+                    她当时说得神神秘秘的，也没告诉我具体怎么做，只说有些事情宁可信其有。后来她毕业了，我也没再追问。<br><br>
+                    刚才翻论坛的时候突然想起来这件事，有没有老学长学姐听过类似的传说？那个“溪城郎”到底是什么来头？那句咒语真的存在吗？<br><br>
+                    （不过表姐说完这事没多久就出了场小意外，休学了半年，也不知道有没有关系……可能就是巧合吧。）
+                </div>
+            </div>
+
+            <!-- 1楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">夜猫子 <span class="floor">1楼</span></div>
+                        <div class="time">2026-01-15 23:52 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    溪城郎？第一次听说。楼主表姐是哪个学院的？有没有更具体的细节？
+                </div>
+            </div>
+
+            <!-- 2楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">老油条 <span class="floor">2楼</span></div>
+                        <div class="time">2026-01-16 00:03 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    我好像听过类似的版本，说是论坛某个角落里藏着“门”，找到“门”的人要等到特定时间，念叨点什么才能进去。但具体怎么操作没人知道，都是当鬼故事传的。<br><br>
+                    话说楼主表姐后来没事吧？
+                </div>
+            </div>
+
+            <!-- 3楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">网上冲浪选手 <span class="floor">3楼</span></div>
+                        <div class="time">2026-01-16 00:07 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    哇塞，我刚才在浏览器上检索了一下这个“溪城郎”，还真让我搜出点东西！没准这个咒语在论坛里念一遍的传说是确有其事呢
+                </div>
+            </div>
+
+            <!-- 4楼 -->
+            <div class="reply-item">
+                <div class="reply-item header">
+                    <div class="avatar"></div>
+                    <div class="user-info">
+                        <div class="username">不信邪 <span class="floor">4楼</span></div>
+                        <div class="time">2026-01-16 00:11 | 只看该作者</div>
+                    </div>
+                </div>
+                <div class="content">
+                    迷信！肯定是当年有人闲得慌编出来的。大家散了吧，早点睡。
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        <p>溪城大学学生论坛 © 2026 版权所有 | 技术支持：校信息化办公室</p>
+    </div>
+</body>
+</html>

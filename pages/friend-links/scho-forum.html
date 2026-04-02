@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>溪城大学学生论坛 - 课程讨论</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+
+        /* 蓝白色清爽风格 */
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* 顶部导航栏 */
+        .header {
+            background-color: #005ea5;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .header .logo {
+            display: flex;
+            align-items: center;
+        }
+        .header .logo h1 {
+            font-size: 25px;
+            font-weight: bold;
+            margin-left: 15px;
+            color: #ffffff;
+        }
+        .header .nav {
+            margin-left: 50px;
+        }
+        .header .nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+        .header .nav a:hover {
+            color: #cce7ff;
+        }
+        .header .user {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 20px; /* 与首页保持一致，增加时钟与链接间距 */
+        }
+        /* 时钟样式（与首页一致） */
+        #clock {
+            font-size: 20px;
+            color: #fff;
+            background: rgba(255,255,255,0.1);
+            padding: 6px 12px;
+            border-radius: 6px;
+            white-space: nowrap;
+            letter-spacing: 2px;
+            font-family: monospace;
+        }
+        .header .user a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .header .user a:hover {
+            color: #cce7ff;
+        }
+
+        /* 公告栏 */
+        .top-ad {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #e6f4ff;
+            border: 1px solid #005ea5;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-ad .ad-title {
+            color: #005ea5;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .top-ad .post-btn {
+            background-color: #005ea5;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .top-ad .post-btn:hover {
+            background-color: #0077b3;
+        }
+
+        /* 主体容器 */
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 20px;
+        }
+
+        /* 左侧板块分类 */
+        .left-sidebar {
+            width: 200px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .left-sidebar h3 {
+            color: #005ea5;
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .left-sidebar .category a {
+            display: block;
+            color: #555;
+            text-decoration: none;
+            padding: 8px 0;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .left-sidebar .category a:hover {
+            color: #005ea5;
+            padding-left: 5px;
+        }
+
+        /* 中间帖子列表 */
+        .main-content {
+            flex: 1;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* 帖子样式（统一字体） */
+        .post-item {
+            padding: 20px 0;
+            border-bottom: 1px dotted #e0e0e0;
+        }
+        .post-item:last-child {
+            border-bottom: none;
+        }
+        .post-item .title {
+            font-size: 18px;
+            color: #005ea5;
+            font-weight: bold;
+            text-decoration: none;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .post-item .meta {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        .post-item .meta .tag {
+            display: inline-block;
+            background-color: #e6f4ff;
+            color: #005ea5;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+        .post-item .brief {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* 右侧栏 */
+        .right-sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .right-sidebar h3 {
+            color: #005ea5;
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .right-sidebar .hot-list a {
+            display: block;
+            color: #555;
+            text-decoration: none;
+            padding: 8px 0;
+            font-size: 14px;
+            border-bottom: 1px dashed #eee;
+        }
+        .right-sidebar .hot-list a:hover {
+            color: #005ea5;
+        }
+
+        /* 底部 */
+        .footer {
+            background-color: #005ea5;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+
+        /* 发帖弹窗 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            width: 550px;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .modal-content h3 {
+            color: #005ea5;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .modal-content input,
+        .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .modal-content textarea {
+            height: 120px;
+            resize: none;
+        }
+        .modal-btns {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .modal-btns button {
+            padding: 8px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+        }
+        .modal-btns .cancel {
+            background: #eee;
+            color: #333;
+        }
+        .modal-btns .submit {
+            background: #005ea5;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="header">
+        <div class="logo">
+            <h1>溪城大学学生论坛</h1>
+        </div>
+        <div class="nav">
+            <a href="campus-forum.html"><i class="fa fa-home"></i> 首页</a>
+        </div>
+        <div class="user">
+            <!-- 添加时钟（无秒，与首页一致） -->
+            <div id="clock"></div>
+            <a href="#"><i class="fa fa-user"></i> 登录</a>
+            <a href="#"><i class="fa fa-pen"></i> 注册</a>
+        </div>
+    </div>
+
+    <!-- 公告栏 + 发帖按钮 -->
+    <div class="top-ad">
+        <div class="ad-title">校园论坛 > 课程讨论</div>
+        <button class="post-btn" onclick="openModal()"><i class="fa fa-pen"></i> 发帖</button>
+    </div>
+
+    <!-- 主体内容 -->
+    <div class="container">
+        <!-- 左侧 -->
+        <div class="left-sidebar">
+            <h3>板块分类</h3>
+            <div class="category">
+                 <a href="scho-forum.html"><i class="fa fa-pencil"></i> 课程讨论</a>
+                <a href="#"><i class="fa fa-graduation-cap"></i> 考研考公</a>
+                <a href="#"><i class="fa fa-cutlery"></i> 食堂吐槽</a>
+                <a href="dor-forum.html"><i class="fa fa-bed"></i> 宿舍生活</a>
+                <a href="#"><i class="fa fa-car"></i> 拼车出行</a>
+                <a href="#"><i class="fa fa-heart"></i> 脱单交友</a>
+                <a href="#"><i class="fa fa-exchange"></i> 闲置交易</a>
+            </div>
+        </div>
+
+        <!-- 中间帖子列表（共6条） -->
+        <div class="main-content" id="postList">
+            <div class="post-item">
+                <div class="title">【求助/讨论】这教务系统是上个世纪开发的吧？</div>
+                <div class="meta">
+                    <span class="tag">课程讨论</span>
+                    楼主：选课到自闭 • 2025-12-20 19:34
+                </div>
+                <div class="brief">每次选课都要卡半天，界面丑就算了，验证码还老看不清，点提交永远在转圈。这破系统到底什么时候能升级啊？</div>
+            </div>
+
+            <div class="post-item">
+                <div class="title">求推荐好用的网课查答案平台</div>
+                <div class="meta">
+                    <span class="tag">课程讨论</span>
+                    楼主：网课选手 • 2026-01-12 20:10
+                </div>
+                <div class="brief">智慧树、学习通的题目太多了，有没有靠谱的搜题软件推荐？</div>
+            </div>
+
+            <div class="post-item">
+                <div class="title">有没有高等数学期末复习资料啊</div>
+                <div class="meta">
+                    <span class="tag">课程讨论</span>
+                    楼主：高数难民 • 2026-01-11 18:20
+                </div>
+                <div class="brief">快期末了，高数完全听不懂，求历年真题和复习笔记！</div>
+            </div>
+
+            <div class="post-item">
+                <div class="title">选修课选什么好过又不点名</div>
+                <div class="meta">
+                    <span class="tag">课程讨论</span>
+                    楼主：懒人大学生 • 2026-01-09 21:30
+                </div>
+                <div class="brief">想选水课混学分，求学长学姐推荐不挂科、不麻烦的选修课！</div>
+            </div>
+
+            <div class="post-item">
+                <div class="title">C语言程序设计太难了，有没有一起学习的</div>
+                <div class="meta">
+                    <span class="tag">课程讨论</span>
+                    楼主：编程小白 • 2026-01-07 19:15
+                </div>
+                <div class="brief">指针、循环完全搞不懂，求大佬带飞，或者组队复习！</div>
+            </div>
+
+            <div class="post-item">
+                <div class="title">大英赛有人报名了吗？求备考经验</div>
+                <div class="meta">
+                    <span class="tag">课程讨论</span>
+                    楼主：英语爱好者 • 2026-01-04 15:40
+                </div>
+                <div class="brief">第一次参加大英赛，不知道怎么准备，求资料和经验分享～</div>
+            </div>
+        </div>
+
+        <!-- 右侧 -->
+        <div class="right-sidebar">
+            <h3>热门帖子</h3>
+            <div class="hot-list">
+                <a href="#">2026届校招内推信息汇总（大厂+国企）</a>
+                <a href="#">学校快递站营业时间调整通知</a>
+                <a href="#">选修课避雷！这几门课千万别选</a>
+                <a href="#">二手电动车转让（9成新）</a>
+                <a href="#">校运会报名开始了</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        <p>溪城大学学生论坛 © 2026 版权所有 | 技术支持：校信息化办公室</p>
+    </div>
+
+    <!-- 发帖弹窗 -->
+    <div class="modal" id="postModal">
+        <div class="modal-content">
+            <h3>发布新帖子（课程讨论）</h3>
+            <input type="text" id="postTitle" placeholder="请输入帖子标题">
+            <textarea id="postContent" placeholder="请输入帖子内容"></textarea>
+            <div class="modal-btns">
+                <button class="cancel" onclick="closeModal()">取消</button>
+                <button class="submit" onclick="submitPost()">发布</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 实时时钟（无秒，每分钟更新一次）
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('clock').innerText = `${hours}:${minutes}`;
+        }
+        updateClock();
+        setInterval(updateClock, 60000); // 每分钟更新
+
+        // 打开弹窗
+        function openModal() {
+            document.getElementById("postModal").style.display = "flex";
+        }
+
+        // 关闭弹窗
+        function closeModal() {
+            document.getElementById("postModal").style.display = "none";
+            document.getElementById("postTitle").value = "";
+            document.getElementById("postContent").value = "";
+            document.getElementById("postBrief").value = "";
+        }
+
+        // 提交帖子
+        function submitPost() {
+            let title = document.getElementById("postTitle").value.trim();
+            let brief = document.getElementById("postBrief").value.trim();
+            if (!title) return;
+
+            let now = new Date();
+            let time = now.getFullYear() + "-" +
+                       String(now.getMonth()+1).padStart(2, '0') + "-" +
+                       String(now.getDate()).padStart(2, '0') + " " +
+                       String(now.getHours()).padStart(2, '0') + ":" +
+                       String(now.getMinutes()).padStart(2, '0');
+
+            let postList = document.getElementById("postList");
+            let newPost = document.createElement("div");
+            newPost.className = "post-item";
+            newPost.innerHTML = `
+                <div class="title">${title}</div>
+                <div class="meta">
+                    <span class="tag">课程讨论</span>
+                    楼主：匿名用户 • ${time}
+                </div>
+                <div class="brief">${brief || "暂无简介"}</div>
+            `;
+
+            postList.insertBefore(newPost, postList.firstChild);
+            closeModal();
+        }
+    </script>
+</body>
+</html>
